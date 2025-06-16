@@ -1,0 +1,10 @@
+ <img src="/home/elp/workdrive/localserver/pdfconverter/public/assets/img/logo/LOGO_SUBMARK1.png" alt="" loading="lazy" style=" height: 170px;
+ width: 206px;
+ position: absolute;
+ display: table;
+ margin: auto;
+ opacity: 0.1;
+ left: 50%;
+ top: 60%;
+ transform: translate(-50%, -50%);
+ "  >

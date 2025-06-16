@@ -1,0 +1,662 @@
+@extends('structure.template')
+@section('content')
+
+<style>
+    #clientTable_info {
+        margin-left: 20px;
+    }
+    #clientTable_length {
+        margin-left: 20px;
+    }
+    #clientTable_filter {
+        margin-right: 20px !important;
+    }
+    .client_heading {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        color: #37373d;
+    }
+
+    input.input_div {
+        width: 100%;
+    background-color: #ffffff !important;
+    border: 1px solid #dcdcdc;
+    border-radius: 17px;
+    height: 50px;
+    padding: 0 15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    textarea.input_div {
+        width: 100%;
+    background-color: #ffffff !important;
+    border: 1px solid #dcdcdc;
+    border-radius: 17px;
+    height: 100px;
+    padding: 0 15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    select.form-select.select_list {
+        width: 100%;
+        background-color: #e1e1e1;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 50px;
+        padding: 0 15px;
+    }
+
+
+    .select_box .arrow_icon {
+
+        bottom: 18%;
+    }
+
+    .card.card-plain {
+        border: none !important;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px !important;
+        padding: 25px 20px 35px !important;
+    }
+
+    span.span_div {
+        border: 1px solid #eee;
+        height: 50px;
+        width: 100%;
+        background: #e1e1e1;
+        border-radius: 5px;
+        padding: 10px;
+    }
+.form-control:focus {
+    background-color: #ffffff !important;
+    border: 1px solid #dcdcdc;
+    border-radius: 17px;
+    padding: 0 15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
+}
+
+#editModal .modal-dialog {
+    max-width: 650px !important;
+}
+</style>
+
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg" style="margin-left: 250px;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Client List</li>
+                </ol>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    <!-- <div class="input-group input-group-outline">
+                        <label class="form-label">Type here...</label>
+                        <input type="text" id="searchBox" class="form-control" placeholder="Type name, email, company..." />
+                    </div> -->
+                </div>
+                <ul class="navbar-nav d-flex align-items-center  justify-content-end">
+                    <!-- <li class="nav-item d-flex align-items-center">
+                        <a class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="https://www.creative-tim.com/builder?ref=navbar-material-dashboard">Logout</a>
+                    </li> -->
+                    <!-- <li class="mt-1">
+                        <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star creativetimofficial/material-dashboard on GitHub">Star</a>
+                    </li> -->
+
+                    <!-- <li class="nav-item px-3 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0">
+                            <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
+                        </a>
+                    </li> -->
+                    <!-- <li class="nav-item dropdown pe-3 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="material-symbols-rounded">notifications</i>
+                        </a>
+                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                            <li class="mb-2">
+                                <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="my-auto">
+                                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                <span class="font-weight-bold">New message</span> from Laur
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                13 minutes ago
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="my-auto">
+                                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                <span class="font-weight-bold">New album</span> by Travis Scott
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                1 day
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
+                                            <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <title>credit-card</title>
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                                        <g transform="translate(1716.000000, 291.000000)">
+                                                            <g transform="translate(453.000000, 454.000000)">
+                                                                <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
+                                                                <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                Payment successfully completed
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                2 days
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li> -->
+                    <!-- <li class="nav-item d-flex align-items-center">
+                        <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                            <i class="material-symbols-rounded">account_circle</i>
+                        </a>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">Client List</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0" id="clientTable">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Client Name / Company Name</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email / Ph No.</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PAN / GST</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Address</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($client_list as $client)
+                                    <tr>
+
+                                        <td>
+                                            <div class="d-flex px-2 py-1">
+
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">{{$client->name}}</h6>
+                                                    <p class="text-xs text-secondary mb-0">{{$client->company_name}}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <p class="text-xs font-weight-bold mb-0">{{$client->email}}</p>
+                                            <p class="text-xs text-secondary mb-0">{{$client->ph_no}}</p>
+                                        </td>
+
+                                        <td class="align-middle text-center text-sm">
+                                            <!-- <span class="badge badge-sm bg-gradient-success">Online</span> -->
+                                            <p class="text-xs font-weight-bold mb-0">{{$client->pan_no}}</p>
+                                            <p class="text-xs text-secondary mb-0">{{$client->gst_no}}</p>
+
+                                        </td>
+
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{$client->address}}</span>
+                                        </td>
+
+                                        <td class="align-middle">
+                                            <!-- <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                                                Edit
+                                            </a> -->
+
+                                            <a href="javascript:;" title="Edit" class="text-secondary font-weight-bold text-xs edit-btn btn btn-warning" data-id="{{$client->id}}"
+                                                data-name="{{$client->name}}"
+                                                data-company="{{$client->company_name}}"
+                                                data-email="{{$client->email}}"
+                                                data-phone="{{$client->ph_no}}"
+                                                data-pan="{{$client->pan_no}}"
+                                                data-gst="{{$client->gst_no}}"
+                                                data-address="{{$client->address}}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">Projects table</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center justify-content-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Project</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Budget</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Completion</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2">
+                                                <div>
+                                                    <img src="../assets/img/small-logos/logo-asana.svg" class="avatar avatar-sm rounded-circle me-2" alt="spotify">
+                                                </div>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">Asana</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0">$2,500</p>
+                                        </td>
+                                        <td>
+                                            <span class="text-xs font-weight-bold">working</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <span class="me-2 text-xs font-weight-bold">60%</span>
+                                                <div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <button class="btn btn-link text-secondary mb-0">
+                                                <i class="fa fa-ellipsis-v text-xs"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2">
+                                                <div>
+                                                    <img src="../assets/img/small-logos/github.svg" class="avatar avatar-sm rounded-circle me-2" alt="invision">
+                                                </div>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">Github</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0">$5,000</p>
+                                        </td>
+                                        <td>
+                                            <span class="text-xs font-weight-bold">done</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <span class="me-2 text-xs font-weight-bold">100%</span>
+                                                <div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v text-xs"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2">
+                                                <div>
+                                                    <img src="../assets/img/small-logos/logo-atlassian.svg" class="avatar avatar-sm rounded-circle me-2" alt="jira">
+                                                </div>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">Atlassian</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0">$3,400</p>
+                                        </td>
+                                        <td>
+                                            <span class="text-xs font-weight-bold">canceled</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <span class="me-2 text-xs font-weight-bold">30%</span>
+                                                <div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="30" style="width: 30%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v text-xs"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2">
+                                                <div>
+                                                    <img src="../assets/img/small-logos/bootstrap.svg" class="avatar avatar-sm rounded-circle me-2" alt="webdev">
+                                                </div>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">Bootstrap</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0">$14,000</p>
+                                        </td>
+                                        <td>
+                                            <span class="text-xs font-weight-bold">working</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <span class="me-2 text-xs font-weight-bold">80%</span>
+                                                <div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80" style="width: 80%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v text-xs"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2">
+                                                <div>
+                                                    <img src="../assets/img/small-logos/logo-slack.svg" class="avatar avatar-sm rounded-circle me-2" alt="slack">
+                                                </div>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">Slack</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0">$1,000</p>
+                                        </td>
+                                        <td>
+                                            <span class="text-xs font-weight-bold">canceled</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <span class="me-2 text-xs font-weight-bold">0%</span>
+                                                <div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v text-xs"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2">
+                                                <div>
+                                                    <img src="../assets/img/small-logos/devto.svg" class="avatar avatar-sm rounded-circle me-2" alt="xd">
+                                                </div>
+                                                <div class="my-auto">
+                                                    <h6 class="mb-0 text-sm">Devto</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="text-sm font-weight-bold mb-0">$2,300</p>
+                                        </td>
+                                        <td>
+                                            <span class="text-xs font-weight-bold">done</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex align-items-center justify-content-center">
+                                                <span class="me-2 text-xs font-weight-bold">100%</span>
+                                                <div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v text-xs"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+</main>
+
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Client</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid py-2">
+                    <form action="{{route('client.update')}}" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-md-12 mb-lg-0 mb-4">
+                                        <div class="card mt-4">
+                                            <div class="card-body p-3" id="new_client">
+                                                <div class="row">
+                                                    <input type="hidden" class="form-control input_div" name="client_id" id="editClientId">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="client_name" class="client_heading">Client Name: </label>
+                                                        <input type="text" class="form-control input_div" name="client_name" id="editClientName" placeholder="Client Name">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="company_name" class="client_heading">Company Name: </label>
+                                                        <input type="text" name="company_name" id="editCompanyName" placeholder="Company Name"
+                                                            class="form-control input_div">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6  mb-3">
+                                                        <label for="ph_no" class="client_heading">Ph No: </label>
+                                                        <input type="text" name="ph_no" id="editClientPhone" placeholder="Phone No"
+                                                            class="form-control input_div">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="email" class="client_heading">Email: </label>
+                                                        <input type="text" name="email" id="editClientEmail" placeholder="Email"
+                                                            class="form-control input_div">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6  mb-3">
+                                                        <label for="pan_no" class="client_heading">PAN No: </label>
+                                                        <input type="text" name="pan_no" id="editPanNo" placeholder="PAN No"
+                                                            class="form-control input_div">
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="gst_no" class="client_heading">GST No: </label>
+                                                        <input type="text" name="gst_no" id="editGstNo" placeholder="GST No"
+                                                            class="form-control input_div">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="address" class="client_heading">Address: </label>
+                                                        <textarea name="address" id="editAddress" class="form-control input_div"></textarea>
+                                                    </div>
+                                                </div>
+
+                                                <!-- <div class="col-6 text-end" id="new_client_btn">
+                                                    <button class="btn bg-gradient-dark mb-0" type="submit">Save</button>
+                                                </div> -->
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="{{ asset('assets/js/custom/component/client-list.js') }}"></script>
+<!-- Load jQuery FIRST -->
+<!-- jQuery (MUST come first) -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+<!-- Select2 CSS -->
+<!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
+
+<!-- Select2 JS -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".edit-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                // var s = this.getAttribute("data-client");
+                // var s = JSON.parse(this.getAttribute("data-client"));
+                // console.log(s);
+                // document.getElementById("editClientId").value = this.getAttribute("data-id");
+
+                // let clientName = this.getAttribute("data-name");
+                // let companyName = this.getAttribute("data-company");
+
+                // // Update modal content
+                // document.getElementById("clientInfo").innerHTML = `Name: ${clientName} <br> Company: ${companyName}`;
+
+                document.getElementById("editClientId").value = this.getAttribute("data-id");
+                document.getElementById("editClientName").value = this.getAttribute("data-name");
+                document.getElementById("editCompanyName").value = this.getAttribute("data-company");
+                document.getElementById("editClientEmail").value = this.getAttribute("data-email");
+                document.getElementById("editClientPhone").value = this.getAttribute("data-phone");
+                document.getElementById("editPanNo").value = this.getAttribute("data-pan");
+                document.getElementById("editGstNo").value = this.getAttribute("data-gst");
+                document.getElementById("editAddress").value = this.getAttribute("data-address");
+
+                // Open Bootstrap modal
+                let editModal = new bootstrap.Modal(document.getElementById("editModal"));
+                editModal.show();
+            });
+        });
+    });
+</script>
+<script>
+        var table = $('#clientTable').DataTable({
+            "pageLength": 10,
+             "columnDefs": [
+                { "width": "40%", "targets": 0 },
+                { "width": "20%", "targets": 1 },
+                { "width": "20%", "targets": 2 },
+                { "width": "10%", "targets": 3 },
+                { "width": "10%", "targets": 4 }
+            ]
+        });
+
+
+</script>

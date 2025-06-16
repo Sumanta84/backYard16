@@ -1,0 +1,295 @@
+<script>
+    document.getElementById('asas').addEventListener('submit', function(e) {
+        // Prevent normal form submission
+        e.preventDefault();
+
+        // Submit form via AJAX
+        fetch(this.action, {
+                method: this.method,
+                body: new FormData(this)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                // Create PDF URL
+                const pdfUrl = URL.createObjectURL(blob);
+
+                // Open in new tab
+                const newTab = window.open('', '_blank');
+                newTab.location.href = pdfUrl;
+
+                // Change the URL of the new tab (optional)
+                // You can pass any URL you want here
+                // Note: Due to security restrictions, you can't change the URL to a different domain
+                // setTimeout(() => {
+                //     newTab.location.href = '/bill/success?invoice=' + encodeURIComponent('<?php //echo $bill_data[0]->invoice_id ?? ''; ?>');
+                // }, 1000);
+                console.log($bill_data);
+
+
+                setTimeout(() => {
+                    newTab.location.href = '/print-bill?invoice=' + encodeURIComponent('<?php echo $bill_data[0]->invoice_id ?? ''; ?>');
+                }, 1000);
+            });
+    });
+</script>
+
+
+
+
+
+
+
+
+<script>
+    document.getElementById('asas').addEventListener('submit', function(e) {
+        let hasError = false;
+
+        console.log('hi');
+
+
+        let existing_client = $("#selectclient").val();
+
+        let new_client_name = $("#client_name").val();
+        let new_company_name = $("#company_name").val();
+        let new_ph_no = $("#ph_no").val();
+        let new_email = $("#email").val();
+        let new_pan_no = $("#pan_no").val();
+        let new_gst_no = $("#gst_no").val();
+        let new_address = $("#address").val();
+
+        let gstcheckbox = document.getElementById("gst_bill");
+        let project_title = $("#project_title").val();
+
+
+        if (gstcheckbox.checked) {
+            var gst_bill = 'yes';
+            var cgst = $("#cgst").val();
+            var sgst = $("#sgst").val();
+            var igst = $("#igst").val();
+        } else {
+            var gst_bill = 'no';
+        }
+        let selectedWt1Input = document.querySelectorAll("select[name='selectwt1[]']");
+        let selectedWt1Values = [];
+
+        selectedWt1Input.forEach(input => {
+            selectedWt1Values.push(input.value);
+        });
+
+        let selectedWt2Input = document.querySelectorAll("select[name='selectwt2[]']");
+        let selectedWt2Values = [];
+
+        selectedWt2Input.forEach(input => {
+            selectedWt2Values.push(input.value);
+        });
+
+        let rateInput = document.querySelectorAll("input[name='input_rate[]']");
+        let rateValues = [];
+
+        rateInput.forEach(input => {
+            rateValues.push(input.value);
+        });
+
+        let quantityInput = document.querySelectorAll("input[name='qty[]']");
+        let quantityValues = [];
+
+        quantityInput.forEach(input => {
+            quantityValues.push(input.value);
+        });
+
+        let descriptionInput = document.querySelectorAll("textarea[name='desc[]']");
+        let descriptionValues = [];
+
+        descriptionInput.forEach(input => {
+            descriptionValues.push(input.value);
+        });
+
+        if (existing_client == "") {
+            if (new_client_name == "" || new_ph_no == "" || new_address == "") {
+                $("#error_msg").text("Please select client or type new client details");
+                hasError = true;
+                lo
+                return;
+            }
+        } else if (new_client_name == "" && new_ph_no == "" && new_address == "") {
+            if (existing_client == "") {
+                $("#error_msg").text("Please select client or type new client details");
+                hasError = true;
+                return;
+            }
+        }
+
+        if (project_title == "") {
+            $("#error_msg").text("Please type project title");
+            hasError = true;
+            return;
+        }
+
+        if (gst_bill == "yes") {
+
+            if (cgst == "" || sgst == "") {
+
+                if (igst == "") {
+                    $("#error_msg").text("Please type CGST and SGST or IGST value");
+                    hasError = true;
+                    return;
+                } else {
+
+                }
+            } else if (igst == "") {
+                if (cgst == "" || sgst == "") {
+                    $("#error_msg").text("Please type CGST and SGST or IGST value");
+                    hasError = true;
+                    return;
+                }
+            }
+        }
+        if (hasError) {
+            e.preventDefault();
+        }
+    });
+</script>
+
+
+<img src="{{ asset('uploads/signatures/' . $auth_data->signature) }}" class="navbar-brand-img" width="160" height="50" alt="sign">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <tr>
+                                <td style="text-align: left;">Name : {{$client_data->name}}</td>
+                                <td style="text-align: left;">Name : {{$client_data->name}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Address - {{$client_data->address}}</td>
+                                <td style="text-align: left;">Address - {{$client_data->address}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">GSTIN: </td>
+                                <td style="text-align: left;">GSTIN: </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">State : West Bengal</td>
+
+                                <td style="text-align: left;">state :</td>
+
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Code :</td>
+                                <td style="text-align: left;">Code :</td>
+                            </tr>
+                        </table>
+                        <div class="table_footer" style=" padding-bottom: 30px;">
+                            <table class="officeuse_table">
+                                <thead>
+                                    <tr>
+                                        <th>Serial No.</th>
+                                        <th>Description</th>
+                                        <th>HSN/ SAC Code
+                                        </th>
+                                        <th>UCM
+                                        </th>
+                                        <th>Qty
+                                        </th>
+                                        <th>Rate
+                                        </th>
+                                        <th>Amount
+                                        </th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+
+                                    @php
+                                    $net_total = 0;
+                                    @endphp
+
+                                    @foreach($bill_data as $key=>$bill)
+                                    @php
+                                    $total = $bill->quantity * $bill->rate;
+                                    $net_total = $net_total + $total;
+                                    @endphp
+                                    <tr>
+                                        <td style="width: 5%;">{{$key+1}}</td>
+                                        <td style="width: 28%;">{{$bill->description}}</td>
+                                        <td style="width: 22%;">{{$bill->wt_2_item}} <br> <span style="font-size: 13px;">({{$bill->wt_1_item}})</span> </td>
+                                        <td style="width: 10%;">{{$bill->unit}}</td>
+                                        <td style="width: 10%;">{{$bill->quantity}}</td>
+                                        <td style="width: 20%;">{{number_format($bill->rate)}}</td>
+                                        <td style="width: 15%;">{{number_format($total)}}</td>
+                                    </tr>
+                                    @endforeach
+
+
+
+                                </tbody>
+
+                                @php
+                                $formatter = new \NumberFormatter('en', \NumberFormatter::SPELLOUT);
+                                $amountInWords = ucfirst($formatter->format($gst_data->net_total));
+                                @endphp
+
+
+
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="5" rowspan="6">Total Invoice Amount in words: <br>{{$amountInWords}} only</td>
+                                        <td style="text-align: left;"><strong>Total Amount Before Tax</strong></td>
+                                        <td>{{number_format($gst_data->total_amt)}}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="text-align: left; ">Add: CGST @ {{$gst_data->cgst_percentage}}%</td>
+                                        <td>{{number_format($gst_data->cgst_amt)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Add: SGST @ {{$gst_data->sgst_percentage}}%</td>
+                                        <td>{{number_format($gst_data->sgst_amt)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Add: IGST <br>@ {{$gst_data->igst_percentage}}%</td>
+                                        <td>{{number_format($gst_data->igst_amt)}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Rounded Off / UP</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;"><strong>Total Amount After Tax</strong></td>
+                                        <td>{{number_format($gst_data->net_total)}}</td>
+                                    </tr>
+                                </tfoot>
+
+
+                            </table>
+                            <table>
+                                <tr>
+                                    <td style="text-align: right;" colspan="6">For Backyard16 </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td style="text-align: left;">BANK DETAILS</td>
+                                    <td rowspan="4"> Authorised Signature </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;">State Bank of India </td>
+
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;">Account No-42840001299</td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: left;">IFSC Code: SBIN0001649</td>
+                                </tr>
+                            </table>
+                        </div> -->

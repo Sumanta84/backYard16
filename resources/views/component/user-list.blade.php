@@ -1,0 +1,399 @@
+@extends('structure.template')
+@section('content')
+
+<style>
+    select.form-select.select_list {
+        width: 100%;
+        background-color: #e1e1e1;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 50px;
+        padding: 0 15px;
+    }
+
+
+    #clientTable_info {
+        margin-left: 20px;
+    }
+
+    #clientTable_length {
+        margin-left: 20px;
+    }
+
+    #clientTable_filter {
+        margin-right: 20px !important;
+    }
+
+    .client_heading {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        color: #37373d;
+    }
+
+    input.input_div {
+        width: 100%;
+    background-color: #ffffff !important;
+    border: 1px solid #dcdcdc;
+    border-radius: 17px;
+    height: 50px;
+    padding: 0 15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    textarea.input_div {
+        width: 100%;
+    background-color: #ffffff !important;
+    border: 1px solid #dcdcdc;
+    border-radius: 17px;
+    height: 100px;
+    padding: 0 15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+
+    select.form-select.select_list {
+        width: 100%;
+        background-color: #e1e1e1;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 50px;
+        padding: 0 15px;
+    }
+
+
+    .select_box .arrow_icon {
+
+        bottom: 18%;
+    }
+
+    .card.card-plain {
+        border: none !important;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px !important;
+        padding: 25px 20px 35px !important;
+    }
+
+    span.span_div {
+        border: 1px solid #eee;
+        height: 50px;
+        width: 100%;
+        background: #e1e1e1;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    #userTable_filter {
+        margin-right: 20px;
+    }
+
+    #userTable_length,
+    #userTable_info {
+        margin-left: 20px;
+    }
+	#user_sign{
+		padding:11px;
+	}
+
+select.form-select.select_list {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #dcdcdc;
+    border-radius: 17px;
+    height: 50px;
+    padding: 0 15px;
+    box-shadow: rgb(79 82 86 / 32%) 0px 8px 24px;
+}
+input[type="file"] {
+  display: none;
+}
+label.custom-file-upload {
+    border: 1px solid #bababa;
+    background: #eee;
+    color: #000;
+    padding: 10px;
+    border-radius: 6px;
+ cursor: pointer;
+}
+#editModal .modal-dialog {
+    max-width: 570px !important;
+}
+
+.form-control:focus {
+    background-color: #ffffff !important;
+    border: 1px solid #dcdcdc;
+    border-radius: 17px;
+    padding: 0 15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px !important;
+}
+</style>
+
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg" style="margin-left: 250px;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">User List</li>
+                </ol>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                </div>
+                <ul class="navbar-nav d-flex align-items-center  justify-content-end">
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">User List</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0" id="userTable">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phone No.</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Active/Inactive</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($user_data as $user)
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2 py-1">
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">{{$user->name}}</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <p class="text-xs font-weight-bold mb-0">{{$user->email}}</p>
+                                        </td>
+
+                                        <td class="align-middle text-center text-sm">
+                                            <p class="text-xs text-secondary mb-0">{{$user->ph_no}}</p>
+                                        </td>
+                                        <td class="align-right">
+                                            <div class="form-check form-switch ps-0 billing_btn1" style="margin-left: 70px;">
+                                                <input class="form-check-input ms-auto toggle-status" type="checkbox" name="user_status" id="user_status" data-id="{{ $user->id }}"
+                                                    {{ $user->status ? 'checked' : '' }}>
+                                            </div>
+                                        </td>
+
+                                        <td class="align-middle">
+                                            <a href="javascript:;" title="Edit" class="text-secondary font-weight-bold text-xs edit-btn btn btn-warning" style="margin-left: 40px;" data-id="{{$user->id}}" data-name="{{$user->name}}" data-status="{{$user->status}}" data-role="{{$user->role}}" data-sign="{{$user->signature}}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid py-2">
+                    <form action="{{route('user.update')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-md-12 mb-lg-0 mb-4">
+                                        <div class="card mt-4">
+                                            <div class="card-body p-3" id="edit_user">
+                                                <div class="row">
+                                                    <input type="hidden" class="form-control input_div" name="user_id" id="editUserId">
+                                                    <div class="col-md-6 mb-3">
+
+                                <label for="user_name" class="client_heading">Name: </label>
+                                                        <input type="text" class="form-control input_div" name="user_name" id="editUserName" placeholder="Name">
+
+                                                        @error('user_name')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="password" class="client_heading">New Password: </label>
+                                                        <input type="text" name="user_password" id="editPassword" placeholder="New Password"
+                                                            class="form-control input_div">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6  mb-3">
+                                                        <label for="role" class="client_heading">Role: </label>
+                                                        <select name="user_role" id="user_role" class="form-select select_list">
+                                                            <option value="admin">Admin</option>
+                                                            <option value="user">User</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6  mb-3 form-check form-switch ps-3 billing_btn1">
+                                                        <label for="role" class="client_heading">Active/Inavtive: </label>
+                                                        <input class="form-check-input" type="checkbox" name="edit_user_status" id="edit_user_status" style="margin: 15px 0px 0px 15px;">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6  mb-3">
+                                                        <label for="signature" class="client_heading">Signature: </label>
+                                                        <img src="" alt="sign" id="signaturePreview" width="200" height="100">
+                                                    </div>
+                                                          <div class="col-md-6  mb-3">
+                                                             <label for="sign" class="client_heading">Upload Signature: </label>
+                                                        <label for="user_sign" class="custom-file-upload">
+        										Choose file
+    										</label>
+                                            <input type="file" name="user_sign" id="user_sign"
+                                                class="form-control input_div sign">
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+
+<script>
+    var table = $('#userTable').DataTable({
+        "pageLength": 10
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".edit-btn").forEach(button => {
+            button.addEventListener("click", function() {
+
+                document.getElementById("editUserId").value = this.getAttribute("data-id");
+                document.getElementById("editUserName").value = this.getAttribute("data-name");
+
+                const role = this.getAttribute("data-role");
+                document.getElementById("user_role").value = role;
+
+                const status = this.getAttribute("data-status");
+                const checkbox = document.getElementById("edit_user_status");
+
+
+
+                checkbox.checked = status === "1" || status === "true";
+
+
+                 // Get the signature image path
+                const signaturePath = this.getAttribute("data-sign");
+                const imageElement = document.getElementById("signaturePreview");
+
+
+
+                if (signaturePath) {
+                    imageElement.src = '/uploads/signatures/'+signaturePath;
+                    imageElement.style.display = 'block';
+                } else {
+                    imageElement.src = '';
+                    imageElement.style.display = 'none';
+                }
+
+                // Open Bootstrap modal
+                let editModal = new bootstrap.Modal(document.getElementById("editModal"));
+                editModal.show();
+            });
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        $('.toggle-status').on('change', function () {
+            const userId = $(this).data('id');
+            console.log(userId);
+
+            const newStatus = $(this).is(':checked') ? 1 : 0;
+
+            console.log(newStatus);
+
+
+            $.ajax({
+                url: "{{ route('update.user.status') }}",
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    user_id: userId,
+                    status: newStatus
+                },
+                success: function(response) {
+                },
+                error: function(xhr) {
+                    alert('Something went wrong!');
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+

@@ -1,0 +1,209 @@
+@extends('structure.template')
+@section('content')
+
+<style>
+    #clientTable_info {
+        margin-left: 20px;
+    }
+
+    #clientTable_length {
+        margin-left: 20px;
+    }
+
+    #clientTable_filter {
+        margin-right: 20px !important;
+    }
+
+    .client_heading {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        color: #37373d;
+    }
+
+    input.input_div {
+        width: 100%;
+        background-color: #e1e1e1 !important;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 50px;
+        padding: 0 15px;
+    }
+
+    textarea.input_div {
+        width: 100%;
+        background-color: #e1e1e1 !important;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 100px;
+        padding: 0 15px;
+    }
+
+    select.form-select.select_list {
+        width: 100%;
+        background-color: #e1e1e1;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 50px;
+        padding: 0 15px;
+    }
+
+
+    .select_box .arrow_icon {
+
+        bottom: 18%;
+    }
+
+    .card.card-plain {
+        border: none !important;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px !important;
+        padding: 25px 20px 35px !important;
+    }
+
+    span.span_div {
+        border: 1px solid #eee;
+        height: 50px;
+        width: 100%;
+        background: #e1e1e1;
+        border-radius: 5px;
+        padding: 10px;
+    }
+    #userTable_filter{
+        margin-right: 20px;
+    }
+    #userTable_length, #userTable_info{
+        margin-left: 20px;
+    }
+</style>
+
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg" style="margin-left: 250px;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">User List</li>
+                </ol>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                </div>
+                <ul class="navbar-nav d-flex align-items-center  justify-content-end">
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">User List</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0" id="userTable">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phone No.</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Active/Inactive</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($user_data as $user)
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex px-2 py-1">
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">{{$user->name}}</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <p class="text-xs font-weight-bold mb-0">{{$user->email}}</p>
+                                        </td>
+
+                                        <td class="align-middle text-center text-sm">
+                                            <p class="text-xs text-secondary mb-0">{{$user->ph_no}}</p>
+                                        </td>
+                                        <td class="align-right">
+                                            <div class="form-check form-switch ps-0 billing_btn1">
+                                                <input class="form-check-input ms-auto toggle-status" type="checkbox" name="user_status" id="gst_bill" data-id="{{ $user->id }}"
+                                                {{ $user->status ? 'checked' : '' }}>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+
+
+<script src="{{ asset('assets/js/custom/component/client-list.js') }}"></script>
+
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+
+<script>
+    var table = $('#userTable').DataTable({
+        "pageLength": 10
+    });
+</script>
+
+<script>
+$(document).ready(function() {
+    $('.toggle-status').on('change', function () {
+        const userId = $(this).data('id');
+        console.log(userId);
+
+        const newStatus = $(this).is(':checked') ? 1 : 0;
+
+        console.log(newStatus);
+
+
+        $.ajax({
+            url: "{{ route('update.user.status') }}",
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                user_id: userId,
+                status: newStatus
+            },
+            success: function(response) {
+            },
+            error: function(xhr) {
+                alert('Something went wrong!');
+            }
+        });
+    });
+});
+</script>
+

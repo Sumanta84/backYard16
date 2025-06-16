@@ -1,0 +1,763 @@
+@extends('structure.template')
+@section('content')
+
+<style>
+    #billTable_info {
+        margin-left: 20px;
+    }
+
+    #billTable_length {
+        margin-left: 20px;
+    }
+
+    #billTable_filter {
+        margin-right: 20px;
+    }
+
+    .client_heading {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        color: #37373d;
+    }
+
+    input.input_div {
+        width: 100%;
+        background-color: #e1e1e1 !important;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 50px;
+        padding: 0 15px;
+    }
+
+    textarea.input_div {
+        width: 100%;
+        background-color: #e1e1e1 !important;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 100px;
+        padding: 0 15px;
+    }
+
+    select.form-select.select_list {
+        width: 100%;
+        background-color: #e1e1e1;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        height: 50px;
+        padding: 0 15px;
+    }
+
+
+    .select_box .arrow_icon {
+
+        bottom: 18%;
+    }
+
+    .card.card-plain {
+        border: none !important;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px !important;
+        padding: 25px 20px 35px !important;
+    }
+
+    span.span_div {
+        border: 1px solid #eee;
+        height: 50px;
+        width: 100%;
+        background: #e1e1e1;
+        border-radius: 5px;
+        padding: 10px;
+    }
+</style>
+
+
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg" style="margin-left: 250px;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Bill List</li>
+                </ol>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar</div>
+                <div class=" ms-md-auto pe-md-3 d-flex align-items-center">
+                <!-- <div class="input-group input-group-outline">
+                        <label class="form-label">Type here...</label>
+                        <input type="text" class="form-control">
+                    </div> -->
+            </div>
+            <!-- <ul class="navbar-nav d-flex align-items-center  justify-content-end">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="https://www.creative-tim.com/builder?ref=navbar-material-dashboard">Online Builder</a>
+                    </li>
+                    <li class="mt-1">
+                        <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star creativetimofficial/material-dashboard on GitHub">Star</a>
+                    </li>
+                    <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                            <div class="sidenav-toggler-inner">
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item px-3 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0">
+                            <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown pe-3 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="material-symbols-rounded">notifications</i>
+                        </a>
+                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                            <li class="mb-2">
+                                <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="my-auto">
+                                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                <span class="font-weight-bold">New message</span> from Laur
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                13 minutes ago
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="my-auto">
+                                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                <span class="font-weight-bold">New album</span> by Travis Scott
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                1 day
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
+                                            <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <title>credit-card</title>
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                                        <g transform="translate(1716.000000, 291.000000)">
+                                                            <g transform="translate(453.000000, 454.000000)">
+                                                                <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
+                                                                <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                Payment successfully completed
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                2 days
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                            <i class="material-symbols-rounded">account_circle</i>
+                        </a>
+                    </li>
+                </ul> -->
+        </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <!-- <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">Bill List</h6>
+                        </div>
+                    </div> -->
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <tbody>
+                                    <div></div>
+
+
+                                    <tr>
+                                        <td></td>
+                                        <td>
+
+
+
+
+                                            <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                                                <div class="input-group input-group-outline">
+                                                    <label class="form-label">From Date:</label>
+                                                    <input type="text" class="form-control" onfocus="focused(this)" onfocusout="defocused(this)" id="fromDate" data-plugin="datepicker">
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </td>
+
+                                        <td></td>
+                                        <td>
+
+
+
+                                            <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                                                <div class="input-group input-group-outline">
+                                                    <label class="form-label">To Date:</label>
+                                                    <input type="text" class="form-control" onfocus="focused(this)" onfocusout="defocused(this)" id="toDate" data-plugin="datepicker">
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+                                        <td></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <br /><br />
+                            <table class="table align-items-center mb-0" id="billTable">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Invoice Id</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Client Name</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Project Title</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total Amount</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
+                                        <th class="text-secondary opacity-7"></th>
+                                        <th class="text-secondary text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($all_bill_list as $bill_data)
+                                    <tr @if($bill_data->flag == 'original') style="background-color: #add9ff;" @elseif($bill_data->flag == 'duplicate') style="background-color: #ceffba;" @endif>
+                                        <td>
+                                            <div class="d-flex px-2 py-1">
+
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm" @if($bill_data->status == '0') style="color: #b80000;" @endif>{{$bill_data->invoice_id}}</h6>
+                                                    <p class="text-xs text-secondary mb-0">
+                                                        @if($bill_data->bill_type === 'gst')
+                                                        GST Bill
+                                                        @elseif($bill_data->bill_type === 'non gst')
+                                                        Non-GST Bill
+                                                        @else
+                                                        Unknown Type
+                                                        @endif</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <p class="text-xs font-weight-bold mb-0">{{$bill_data->name}}</p>
+                                            <!-- <p class="text-xs text-secondary mb-0">{{$bill_data->name}}</p> -->
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <!-- <span class="badge badge-sm bg-gradient-success">Online</span> -->
+                                            <p class="text-xs font-weight-bold mb-0">{{$bill_data->project_title}}</p>
+                                            <!-- <p class="text-xs text-secondary mb-0">{{$bill_data->project_title}}</p> -->
+
+                                        </td>
+
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{number_format(round($bill_data->total_amount))}}</span>
+                                        </td>
+                                        <!-- {{$bill_data->created_at}} -->
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ \Carbon\Carbon::parse($bill_data->created_at)->format('Y-m-d') }}</span>
+
+                                        </td>
+
+                                        <td class="align-middle">
+                                            <a href="javascript:;" class=" duplicate-bill-btn btn-warning btn btn-sm mb-0 me-1" data-id="{{$bill_data->bill_unique_id}}" @if($bill_data->flag == 'duplicate') style="display: none;" @endif>Duplicate Bill</a>
+
+
+                                        </td>
+
+                                        <td class="align-middle">
+                                            <a href="{{route('print.bill', ['unique_id' => $bill_data->bill_unique_id])}}" class=" btn-success btn btn-sm mb-0 me-1" target="_blank">Print</a>
+
+                                            <a href="javascript:void(0);" class=" btn-info btn btn-sm mb-0 me-2" id="view_btn" style="" onclick="handleView('{{ $bill_data->bill_unique_id }}')">View</a>
+
+
+                                            @php
+                                            $style = '';
+                                            if ($bill_data->status == '0') {
+                                            $style .= ' display: none;';
+                                            }
+                                            @endphp
+                                            <a href="{{route('delete.bill', ['unique_id' => $bill_data->bill_unique_id])}}" class="btn-sm btn-danger btn mb-0 me-3" style="{{$style}}" onclick="return confirm('Are you sure you want to delete this bill?')">Delete</a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- duplicate bill Modal -->
+    <!-- <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Bill Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="invoice-box">
+                        <h4 class="text-center fw-bold">GENERATED INVOICE</h4>
+                        <div class="d-flex justify-content-between">
+                            <p><strong>Invoice No:</strong> XXXXXXXXXXXX</p>
+                            <p><strong>Date: </strong><span id="bill_date"></span></p>
+                        </div>
+
+                        <div class="text-center">
+                            <img src="{{ asset('assets/img/logo/backyard16.webp') }}" alt="logo" srcset="" style="width: 30%">
+                            <p>5/14, Netaji Nagar Road, Kolkata- 700040</p>
+                            <p><u>backyardsixteen@gmail.com, 7003805353, 9874816447</u></p>
+                        </div>
+
+                        <p><strong>Bill To: </strong><span id="client_name_preview"></span></p>
+                        <p><strong>Project Title: </strong><span id="project_title_preview"></span></p>
+
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Serial No:</th>
+                                    <th>Description</th>
+                                    <th>Work Type</th>
+                                    <th>Requirement</th>
+                                    <th>Rate (₹)</th>
+                                    <th>Price (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bill_body">
+
+                            </tbody>
+                        </table>
+
+                        <p class="fw-bold text-center mt-3">Total Amount in words: <span id="price_in_word"></span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+
+    <!-- invoice modal -->
+    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Bill Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="invoice-box">
+                        <h4 class="text-center fw-bold">GENERATED INVOICE</h4>
+                        <div class="d-flex justify-content-between">
+                            <p><strong>Invoice No: </strong><span id="invoice_no"></span></p>
+                            <p><strong>Date: </strong><span id="bill_date">{{date('d/m/Y')}}</span></p>
+                        </div>
+
+                        <div class="text-center">
+                            <!-- <h5>OUR COMPANY LOGO</h5> -->
+                            <img src="{{ asset('assets/img/logo/backyard16.webp') }}" alt="logo" srcset="" style="width: 30%">
+                            <p>5/14, Netaji Nagar Road, Kolkata- 700040</p>
+                            <p><u>backyardsixteen@gmail.com, 7003805353, 9874816447</u></p>
+                        </div>
+
+                        <p><strong>Bill To: </strong><span id="client_name_view"></span></p>
+                        <p><strong>Project Title: </strong><span id="project_title_view"></span></p>
+
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Serial No:</th>
+                                    <th>Work Type</th>
+                                    <th>HSN/SAC Code</th>
+                                    <th>GST %</th>
+                                    <th>Requirement</th>
+                                    <th>Rate (₹)</th>
+                                    <th>Price (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bill_view_body">
+
+                            </tbody>
+                        </table>
+
+                        <p class="fw-bold text-center mt-3">Total Amount in words: <span id="price_in_word_view"></span></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- diplicate modal  -->
+
+    <div class="modal fade" id="duplicateBillModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modal-xl" style="width: 130%;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Bill</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid py-2">
+                        <form action="{{route('dup.bill.save')}}" method="POST">
+                            @csrf
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-lg-0 mb-4">
+                                            <div class="card mt-4">
+                                                <div class="card-body p-3" id="duplicate_bill_form" style="max-width: 95%;">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Save</button>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+
+
+
+
+
+
+
+<!-- <script src="{{ asset('assets/js/custom/component/client-list.js') }}"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/number-to-words"></script>
+
+
+
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+
+<!-- jQuery UI CSS -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+
+<!-- jQuery UI JS -->
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+<!-- 3. DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+    var table;
+    (function($) {
+        // Safe to use $ as jQuery here
+
+        $(document).ready(function() {
+            $("#fromDate, #toDate").datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
+
+            // Initialize DataTable
+            table = $('#billTable').DataTable();
+
+            // Trigger filtering on date change
+            $('#fromDate, #toDate').change(function() {
+                table.draw(); // redraw the table
+            });
+        });
+
+    })(jQuery);
+
+
+
+
+    // ============================
+
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var min = $('#fromDate').val();
+            var max = $('#toDate').val();
+            var date = data[4]; // Assuming the "Date" column is index 4
+
+            if (!min && !max) {
+                return true;
+            }
+
+            // Convert strings to dates
+            var rowDate = new Date(date);
+            var minDate = min ? new Date(min) : null;
+            var maxDate = max ? new Date(max) : null;
+
+            if (
+                (!minDate || rowDate >= minDate) &&
+                (!maxDate || rowDate <= maxDate)
+            ) {
+                return true;
+            }
+            return false;
+        }
+    );
+</script>
+
+
+
+
+
+
+<!-- duplicate bill button -->
+<script>
+    // document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".duplicate-bill-btn").forEach(button => {
+
+        button.addEventListener("click", function() {
+
+            var bill_unique_id = this.getAttribute("data-id");
+            // console.log(bill_unique_id);
+
+
+            $.ajax({
+                url: "{{ route('bill.data') }}",
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    bill_unique_id: bill_unique_id
+                },
+                success: function(data) {
+                    console.log(data);
+
+                    let html = '';
+                    data.bill_data.forEach((item, index) => {
+                        html += `
+                            <div class="row">
+                                <input type="hidden" name="bill_id[]" value="${item.id}">
+                                <div class="col-md-6 mb-3">
+                                    <label for="dup_work_type2_${item.id}" class="client_heading">Work Type 2: </label>
+                                    <input type="text" name="dup_work_type2[]" id="dup_work_type2_${item.id}" value="${item.bill_work_type2}" class="form-control input_div" disabled>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="dup_rate_${item.id}" class="client_heading">Price: </label>
+                                    <input type="text" name="dup_rate[]" id="dup_rate_${item.id}" value="${item.rate}" class="form-control input_div">
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    $('#duplicate_bill_form').html(html);
+
+
+                }
+            });
+
+
+
+            $('#duplicateBillModal').modal('show');
+
+            // Open Bootstrap modal
+            // let editModal = new bootstrap.Modal(document.getElementById("editModal"));
+            // editModal.show();
+        });
+    });
+    // });
+</script>
+<!-- duplicate bill button -->
+
+
+<!-- bill view button -->
+<script>
+    function handleView(uniqueid) {
+        // console.log(uniqueid);
+
+        $.ajax({
+            url: "{{ route('bill.view') }}",
+            type: "POST",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                unique_id: uniqueid
+            },
+            success: function(data) {
+                // console.log(data);
+
+
+                $("#invoice_no").text(data.bill_datas[0].invoice_id);
+
+                $("#client_name_view").text(data.client_data.name);
+
+                $("#project_title_view").text(data.bill_datas[0].project_title);
+
+                // $("#client_name_preview").empty();
+                // $("#bill_body").empty();
+                // $("#project_title").empty();
+
+
+            // ${bill_data.description && bill_data.description.trim() !== '' ? bill_data.description : ''}
+
+                $("#bill_view_body").empty();
+
+                var total_price = 0;
+                var gst_amount = 0;
+
+                data.bill_datas.forEach(function(bill_data, key) {
+                    var newBill = `
+                            <tr>
+                                <td>${key + 1}</td>
+
+                                <td>${bill_data.bill_work_type2}</td>
+
+                                <td>${bill_data.bill_type == 'gst' ? bill_data.hsn_code : 'N/A'}</td>
+
+                                <td>${bill_data.bill_type == 'gst' ? bill_data.gst_rate : 'N/A'}</td>
+
+                                <td>${bill_data.quantity} ${bill_data.unit}</td>
+                                <td>${bill_data.rate.toLocaleString('en-IN')}</td>
+                                <td>${(bill_data.rate * bill_data.quantity).toLocaleString('en-IN')}</td>
+                            </tr>
+                        `;
+                    var total = bill_data.rate * bill_data.quantity;
+                    total_price = total_price + total;
+
+
+                    gst_amount = parseFloat(gst_amount)+parseFloat(bill_data.gst_amt);
+
+                    $("#bill_view_body").append(newBill);
+                });
+
+                var billTotal = `
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Total Price</td>
+                            <td>${total_price.toLocaleString('en-IN')}</td>
+                        </tr>
+                    `;
+
+                $("#bill_view_body").append(billTotal);
+
+                if (data.bill_datas[0].bill_type == 'gst') {
+                    var gstBillTotal = `
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>GST Amount</td>
+                                <td>${gst_amount.toLocaleString('en-IN')}</td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Total Price</td>
+                                <td>${(Math.round(total_price+gst_amount)).toLocaleString('en-IN')}</td>
+                            </tr>
+                        `;
+
+
+                    $("#bill_view_body").append(gstBillTotal);
+                } else {
+
+                    gst_amount = 0;
+                }
+
+
+                var net_price_in_word = numberToWords.toWords(parseInt((Math.round(total_price+gst_amount))));
+
+                $("#price_in_word_view").text(net_price_in_word);
+
+                $('#viewModal').modal('show');
+            }
+        });
+
+    }
+</script>
+<!-- bill view button -->
+
+
+
+<script>
+    // $(document).ready(function () {
+    var billTable = $('#billTable').DataTable({
+        "pageLength": 10
+    });
+
+    // Link the external search box to DataTable search
+    $('#billSearchBox').on('keyup', function() {
+        billTable.search(this.value).draw();
+    });
+    // });
+</script>

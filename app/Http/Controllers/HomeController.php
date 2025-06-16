@@ -1,0 +1,1649 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\BillClient;
+use App\Models\BillGst;
+use Illuminate\Http\Request;
+use App\Models\Client;
+use App\Models\ClientBill;
+use App\Models\ClientDetails;
+use App\Models\User;
+use App\Models\WorkType1;
+use App\Models\WorkType2;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules;
+
+
+class HomeController extends Controller
+{
+    // public function addbill()
+    // {
+    //     $data = Client::all();
+    //     return view('addbill', ['data' => $data]);
+    // }
+    // public function getclient(Request $request)
+    // {
+    //     $data = Client::find($request->id);
+    //     return response()->json(['client' => $data]);
+    // }
+    // public function addbilldetails(Request $request)
+    // {
+    //     $workdetailscount = count($request->workdetails);
+    //     $request->session()->put('workdetailscount', $workdetailscount);
+    //     $request->validate([
+    //         'selectclient' => 'required',
+    //         'name' => 'required|string',
+    //         'email' => 'required|email',
+    //         'contactno' => 'required|max:12',
+    //         'address' => 'required|max:255',
+    //         'gst' => 'required',
+    //         'projecttitle' => 'required|max:255',
+    //         'workdetails' => 'required|array|min:1',
+    //         'workdetails.*.worktype' => 'required|string|max:255',
+    //         'workdetails.*.workdescription' => 'required|string|max:255',
+    //         'workdetails.*.rate' => 'required',
+    //         'workdetails.*.quantity' => 'required',
+    //         'workdetails.*.price' => 'required',
+    //     ]);
+
+    //     // $uniqueid= $this->generateUniqueId();
+    //     // foreach($request->workdetails as $key => $value){
+    //     //     $insert = DB::table()
+    //     // }
+
+
+    // }
+    function generateUniqueId()
+    {
+        do {
+            // $id = str_pad(random_int(0, 99999), 5, '0', STR_PAD_LEFT);
+            $id = Str::random(8);
+        } while (DB::table('client_bill')->where('bill_unique_id', $id)->exists());
+
+        return $id;
+    }
+    // public function dashboard()
+    // {
+    //     // $selected_class = "";
+    //     $today_earning = BillGst::select(DB::raw('SUM(total_amt) as todays_total_amount'))
+    //         ->whereDate('created_at', Carbon::today())
+    //         ->first();
+
+    //     $total_earning = BillGst::select(DB::raw('SUM(total_amt) as total_amount'))->first();
+
+    //     // $today_invoice = ClientBill::select(count('bill_gst.gst_id'))->join('bill_gst', 'client_bill.')
+    //     // $total_invoice =
+    //     // dd($total_earning->total_amount);
+    //     // dd($today_earning->todays_total_amount);
+
+    //     // $latest_invoice = BillGst::select('client_bill.*', 'bill_gst.gst_id','bill_gst.created_at', 'client_details.name', 'client_details.email', 'bill_gst.net_total', 'bill_gst.invoice_id')->join('client_bill', 'bill_gst.bill_unique_id', '=', 'client_bill.bill_unique_id')->join('client_details', 'client_bill.bill_client_id', '=', 'client_details.id')->where('client_bill.flag', '=', 'original') ->where('bill_gst.invoice_id', 'not like', '%\_D')->orderby('bill_gst.created_at', 'desc')->distinct('bill_gst.invoice_id')->limit(5)->get();
+    //     // // dd($latest);
+
+    //     // $latest_invoice = BillGst::join('client_bill', 'bill_gst.bill_unique_id', '=', 'client_bill.bill_unique_id')->orderby('bill_gst.created_at', 'desc')->get();
+
+    //     $latest_invoice = BillGst::select(
+    //         'bill_gst.invoice_id',
+    //         'bill_gst.gst_id',
+    //         'bill_gst.created_at',
+    //         'client_details.name',
+    //         'client_details.email',
+    //         'bill_gst.net_total'
+    //     )
+    //         ->join('client_bill', 'bill_gst.bill_unique_id', '=', 'client_bill.bill_unique_id')
+    //         ->join('client_details', 'client_bill.bill_client_id', '=', 'client_details.id')
+    //         ->whereRaw("bill_gst.invoice_id NOT LIKE '%_D'")
+    //         ->orderBy('bill_gst.created_at', 'desc')
+    //         ->distinct()
+
+    //         ->get();
+
+
+    //     // dd($latest_invoice);
+
+    //     $todaysTotalAmount = $today_earning->todays_total_amount ?? 0;
+    //     $totalAmount = $total_earning->total_amount ?? 0;
+
+    //     return view('component.dashboard', compact('todaysTotalAmount', 'totalAmount', 'latest_invoice'));
+    // }
+
+    public function dashboard()
+    {
+        // $selected_class = "";
+        $today_earning = BillGst::select(DB::raw('SUM(total_amt) as todays_total_amount'))
+            ->whereDate('created_at', Carbon::today())
+            ->first();
+
+        $total_earning = BillGst::select(DB::raw('SUM(total_amt) as total_amount'))->first();
+
+
+        // $latest_invoice = BillGst::select(
+        //     'bill_gst.invoice_id',
+        //     'bill_gst.gst_id',
+        //     'bill_gst.created_at',
+        //     'client_details.name',
+        //     'client_details.email',
+        //     'bill_gst.total_amt',
+        //     'bill_client.project_title',
+        //     'client_details.company_name',
+        //     'client_details.created_at',
+
+        // )
+        //     // ->join('client_bill', 'bill_gst.bill_unique_id', '=', 'client_bill.bill_unique_id')
+        //     ->join('bill_client', 'bill_gst.bill_unique_id', '=', 'bill_client.bill_unique_id')
+
+        //     ->join('client_details', 'bill_client.bill_client_id', '=', 'client_details.id')
+        //     ->whereRaw("bill_gst.invoice_id NOT LIKE '%_D'")
+        //     ->orderBy('bill_gst.created_at', 'desc')
+        //     ->distinct()
+
+        //     ->get();
+
+        $latest_invoice = BillClient::join('client_details', 'bill_client.bill_client_id', '=', 'client_details.id')
+            ->select(
+                'client_details.name',
+                'client_details.company_name',
+                'bill_client.project_title',
+                'bill_client.invoice_id',
+                'bill_client.bill_unique_id',
+                'bill_client.bill_type',
+                'bill_client.flag',
+                'bill_client.created_at',
+                'bill_client.status',
+                DB::raw('SUM(bill_client.total_amt) as total_amount'),
+                DB::raw('SUM(bill_client.gst_amt) as total_gst_amount')
+            )
+            ->where('bill_client.status', '=', '1')
+            ->orderBy('bill_client.created_at', 'desc')
+            ->whereRaw("bill_client.invoice_id NOT LIKE '%_D'")
+            ->limit(5)
+            ->groupBy(
+                'bill_client.bill_unique_id',
+                'bill_client.invoice_id',
+                'client_details.name',
+                'client_details.company_name',
+                'bill_client.project_title',
+                'bill_client.bill_type',
+                'bill_client.flag',
+                'bill_client.created_at',
+                'bill_client.status',
+
+
+            )
+            ->get();
+
+
+
+        // dd($latest_invoice);
+
+        $todaysTotalAmount = $today_earning->todays_total_amount ?? 0;
+        $totalAmount = $total_earning->total_amount ?? 0;
+
+        return view('component.dashboard', compact('todaysTotalAmount', 'totalAmount', 'latest_invoice'));
+    }
+
+    public function client_list()
+    {
+        // dd(Auth::user()->role);
+
+        if (Auth::user()->role == "admin") {
+            $client_list = ClientDetails::all();
+        } else if (Auth::user()->role == "user") {
+            $client_list = ClientDetails::where('created_by', '=', Auth::user()->id)->get();
+        }
+        return view('component.client-list', compact('client_list'));
+    }
+
+    public function client()
+    {
+        return view('component.client');
+    }
+
+    public function user()
+    {
+        return view('component.user');
+    }
+
+    public function client_save(Request $request)
+    {
+        // dd($request);
+        // dd(Auth::user()->id);
+        $client['name'] = $request->client_name;
+        $client['company_name'] = $request->company_name;
+        $client['ph_no'] = $request->ph_no;
+        $client['email'] = $request->email;
+        $client['pan_no'] = $request->pan_no;
+        $client['gst_no'] = $request->gst_no;
+        $client['address'] = $request->address;
+        $client['created_by'] = Auth::user()->id;
+
+
+
+        $data = ClientDetails::insert($client);
+        return redirect()->back()->with('success', 'Client add successful');
+    }
+
+
+    // public function user_save(Request $request)
+    // {
+    //     // dd(Auth::user()->id);
+    //     $client['name'] = $request->client_name;
+    //     $client['company_name'] = $request->company_name;
+    //     $client['ph_no'] = $request->ph_no;
+    //     $client['email'] = $request->email;
+    //     $client['pan_no'] = $request->pan_no;
+    //     $client['gst_no'] = $request->gst_no;
+    //     $client['address'] = $request->address;
+    //     $client['created_by'] = Auth::user()->id;
+
+
+
+    //     $data = ClientDetails::insert($client);
+    //     return redirect()->back()->with('success', 'Client add successful');
+    // }
+
+    public function client_edit(Request $request)
+    {
+        // dd($request->client_id);
+
+        // Find the client by ID and update
+        // $client = ClientDetails::findOrFail($request->client_id);
+        // $client->update([
+        //     'name' => $request->client_name,
+        //     'company_name' => $request->company_name,
+        //     'ph_no' => $request->ph_no,
+        //     'email' => $request->email,
+        //     'pan_no' => $request->pan_no,
+        //     'gst_no' => $request->gst_no,
+        //     'address' => $request->address,
+        // ]);
+
+        ClientDetails::where('id', $request->client_id)
+            ->update([
+                'name' => $request->client_name,
+                'company_name' => $request->company_name,
+                'ph_no' => $request->ph_no,
+                'email' => $request->email,
+                'pan_no' => $request->pan_no,
+                'gst_no' => $request->gst_no,
+                'address' => $request->address,
+                'last_updated_by' => Auth::user()->id,
+            ]);
+
+        return redirect()->back()->with('success', 'Client updated successfully');
+    }
+
+    public function billing()
+    {
+        $all_client = ClientDetails::all();
+        $work_type1_data = WorkType1::all();
+        // dd($work_type1_data);
+        return view('component.billing', compact('work_type1_data', 'all_client'));
+    }
+
+    public function client_data(Request $request)
+    {
+        // dd($request);
+        $client_data = ClientDetails::where('id', $request->client_id)->first();
+        return response()->json($client_data);
+    }
+
+    public function fetch_wt2_data(Request $request)
+    {
+
+        $workType2Data = WorkType2::where('wt_1_id', $request->work_type1_id)->get();
+        // dd($workType2Data);
+        return response()->json($workType2Data);
+    }
+
+    public function fetch_wt2_rate(Request $request)
+    {
+        $workType2Rate = WorkType2::join('hsn_list', 'work_type_2.hsn_id', '=', 'hsn_list.hsn_id')->where('id', $request->id)->first();
+        // dd($workType2Rate);
+        return response()->json($workType2Rate);
+    }
+
+    // public function bill_preview(Request $request)
+    // {
+    //     $client_data = [];
+    //     $bill_info = [];
+    //     $bill_details = [];
+    //     foreach($request['formData']['work_type_2'] as $wt2){
+    //         // dd($wt2);
+
+    //         if($wt2){
+    //             if($request['formData']['existing_client']){
+    //                 $client_data = ClientDetails::where('id',$request['formData']['existing_client'])->first();
+    //             }else{
+    //             $client_data['name'] = $request['formData']['client_name'];
+    //             $client_data['company_name'] = $request['formData']['company_name'];
+    //             $client_data['ph_no'] = $request['formData']['ph_no'];
+    //             $client_data['email'] = $request['formData']['email'];
+    //             $client_data['pan_no'] = $request['formData']['pan_no'];
+    //             $client_data['gst_no'] = $request['formData']['gst_no'];
+    //             $client_data['address'] = $request['formData']['address'];
+    //             }
+
+    //             $bill_info['duplicate_bill'] = $request['formData']['duplicate_bill'];
+    //             $bill_info['gst_bill'] = $request['formData']['gst_bill'];
+
+
+    //             if($request['formData']['duplicate_bill'] == 'yes'){
+    //                 for($i=0;$i<count($request['formData']['work_type_1']);$i++)
+    //                 {
+    //                     $bill_data = WorkType2::select('work_type_1.wt_1_item', 'work_type_2.wt_2_item', 'work_type_2.unit')->join('work_type_1', 'work_type_2.wt_1_id', '=', 'work_type_1.id')->where('work_type_2.id','=',$request['formData']['work_type_2'][$i])->first();
+
+    //                     // dd($bill_data);
+
+    //                     // dd($bill_data->toArray());
+    //                     $bill_data['quantity'] = $request['formData']['quantity'][$i];
+    //                     $bill_data['description'] = $request['formData']['description'][$i];
+    //                     $bill_data['rate'] = $request['formData']['rate'][$i];
+
+    //                     $bill_details[] = $bill_data->toArray();
+    //                 }
+
+    //             }else{
+    //                 for($i=0;$i<count($request['formData']['work_type_1']);$i++)
+    //                 {
+    //                     $bill_data = WorkType2::select('work_type_1.wt_1_item', 'work_type_2.wt_2_item', 'work_type_2.unit', 'work_type_2.rate')->join('work_type_1', 'work_type_2.wt_1_id', '=', 'work_type_1.id')->where('work_type_2.id','=',$request['formData']['work_type_2'][$i])->first();
+
+    //                     // dd($bill_data);
+
+    //                     // dd($bill_data->toArray());
+    //                     $bill_data['quantity'] = $request['formData']['quantity'][$i];
+    //                     $bill_data['description'] = $request['formData']['description'][$i];
+
+    //                     $bill_details[] = $bill_data->toArray();
+    //                 }
+    //             }
+
+    //             // dd($client_data);
+    //             // dd($bill_info);
+    //             // dd($bill_details);
+    //         }
+    //     }
+
+    //     return response()->json([
+    //         'client_data' => $client_data,
+    //         'bill_info' => $bill_info,
+    //         'bill_details' => $bill_details,
+    //     ]);
+    // }
+
+    public function bill_preview(Request $request)
+    {
+        try {
+
+
+            $client_data = [];
+            $bill_info = [];
+            $bill_details = [];
+            // dd(($request['formData']));
+            // foreach ($request['formData']['work_type_2'] as $wt2) {
+
+            if (count($request['formData']['work_type_2']) > 0) {
+                if ($request['formData']['existing_client']) {
+                    $client_data = ClientDetails::where('id', $request['formData']['existing_client'])->first();
+                } else {
+                    $client_data['name'] = $request['formData']['client_name'];
+                    $client_data['company_name'] = $request['formData']['company_name'];
+                    $client_data['ph_no'] = $request['formData']['ph_no'];
+                    $client_data['email'] = $request['formData']['email'];
+                    $client_data['pan_no'] = $request['formData']['pan_no'];
+                    $client_data['gst_no'] = $request['formData']['gst_no'];
+                    $client_data['address'] = $request['formData']['address'];
+                }
+
+                // dd($request['formData']['work_type_2']);
+                $bill_info['gst_bill'] = $request['formData']['gst_bill'];
+                $bill_info['project_title'] = $request['formData']['project_title'];
+
+                for ($i = 0; $i < count($request['formData']['work_type_1']); $i++) {
+                    // $bill_data = WorkType2::select('work_type_1.wt_1_item', 'work_type_2.wt_2_item', 'work_type_2.rate')->join('work_type_1', 'work_type_2.wt_1_id', '=', 'work_type_1.id')->where('work_type_2.id', '=', $request['formData']['work_type_2'][$i])->first();
+
+                    if ($request['formData']['work_type_2'][$i] == null) {
+                        $bill_data['wt_2_item'] = $request['formData']['type_work_type_2'][$i];
+                    } else {
+                        $bill_data = WorkType2::select('work_type_2.wt_2_item')->join('work_type_1', 'work_type_2.wt_1_id', '=', 'work_type_1.id')->where('work_type_2.id', '=', $request['formData']['work_type_2'][$i])->first();
+                    }
+
+
+                    // dd($bill_data);
+                    $bill_data['quantity'] = $request['formData']['quantity'][$i];
+                    $bill_data['description'] = $request['formData']['description'][$i];
+                    $bill_data['unit'] = $request['formData']['unit'][$i];
+
+                    $bill_data['rate'] = $request['formData']['rate'][$i];
+
+
+
+                    $bill_details[] = $bill_data->toArray();
+                }
+                // dd($bill_details);
+            }
+            // }
+            // dd($client_data);
+            return response()->json([
+                'client_data' => $client_data,
+                'bill_info' => $bill_info,
+                'bill_details' => $bill_details,
+            ]);
+        } catch (Exception $e) {
+            // dd($e);
+            return $e->getMessage();
+        }
+    }
+
+
+    public function create_bill(Request $request)
+    {
+
+        $date = Carbon::parse($request->invoice_date);
+        $year = $date->year;
+
+        if ($date->month < 4) {
+            $startYear = $year - 1;
+            $endYear = $year;
+        } else {
+            $startYear = $year;
+            $endYear = $year + 1;
+        }
+
+        $financialYear = substr($startYear, -2) . '-' . substr($endYear, -2);
+
+
+        // $lastId = BillGst::where('financial_year', '=', $financialYear)->count('gst_id');
+        // dd($lastId);
+
+        // dd($financialYear);
+
+
+        $wt2_assoc = array_filter($request->selectwt2);
+        $wt2 = array_values($wt2_assoc);
+        // dd($wt2);
+
+        $hsn_code_assoc = array_filter($request->hsn);
+        $hsn_code = array_values($hsn_code_assoc);
+
+
+        if (count($request->qty) > 0) {
+            if (in_array(null, $request->qty, true)) {
+                return back()->with('error', 'One or more quantity values are missing.');
+            }
+        }
+
+        if (count($request->input_rate) > 0) {
+            if (in_array(null, $request->input_rate, true)) {
+                return back()->with('error', 'One or more rate values are missing.');
+            }
+        }
+
+        if (count($request->unit) > 0) {
+            if (in_array(null, $request->unit, true)) {
+                return back()->with('error', 'One or more unit values are missing.');
+            }
+        }
+
+
+        if ($request->gst_bill) {
+            if ($request->igst) {
+                $gst_bill = 'gst';
+                $igst_bill = 'igst';
+            } else {
+                $gst_bill = 'gst';
+                $igst_bill = 'non igst';
+            }
+        } else {
+            $gst_bill = 'non gst';
+            $igst_bill = 'non igst';
+        }
+
+
+
+
+
+
+        // dd($request);
+        if ($request->gst_bill) {
+            if ($request->igst) {
+                $gst_bill = 'gst';
+                $igst_bill = 'igst';
+            } else {
+                $gst_bill = 'gst';
+                $igst_bill = 'non igst';
+            }
+        } else {
+            $gst_bill = 'non gst';
+            $igst_bill = 'non igst';
+        }
+        $uniq_id = $this->generateUniqueId();
+        // dd($in_no);
+        if (!$request->selectclient) {
+            $client = ClientDetails::create([
+                'name'         => $request->client_name,
+                'ph_no'        => $request->ph_no,
+                'email'        => $request->email,
+                'pan_no'       => $request->pan_no,
+                'gst_no'       => $request->gst_no,
+                'address'      => $request->address,
+                'created_by'   => Auth::user()->id,
+                'company_name' => $request->company_name,
+            ]);
+
+            $client_id = $client->id;
+        } else {
+            $client_id = $request->selectclient;
+        }
+
+        $total_amount = 0;
+        $currentYear = Carbon::now()->year;
+        // $lastId = DB::table('bill_gst')->latest('gst_id')->value('gst_id');
+
+        // dd($last_id);
+        // if ($lastId) {
+        //     $last_id = $lastId;
+        // } else {
+        //     $last_id = 0;
+        // }
+
+
+
+        if ($request->gst_bill) {
+            $lastId = BillGst::where('financial_year', '=', $financialYear)->where('invoice_type', '=', 'gst')->count('gst_id');
+            $gst_lastId = $lastId + 1;
+            do {
+                $invoice_id = 'B16/' . $financialYear . '/' . $gst_lastId;
+                $invoice_no_check = BillGst::where('invoice_id', $invoice_id)->first();
+                if ($invoice_no_check) {
+                    $gst_lastId++;
+                }
+            } while ($invoice_no_check);
+
+            $non_gst_invoice_no = '';
+        } else {
+            $lastId = BillGst::where('financial_year', '=', $financialYear)->where('invoice_type', '=', 'non gst')->count('gst_id');
+            $non_gst_lastId = $lastId + 1;
+            do {
+                $invoice_id = 'B16/' . $financialYear . '/' . $non_gst_lastId . '/' . $request->non_gst_bill_invoice;
+                $invoice_no_check = BillGst::where('invoice_id', $invoice_id)->first();
+                if ($invoice_no_check) {
+                    $non_gst_lastId++;
+                }
+            } while ($invoice_no_check);
+            $non_gst_invoice_no = $request->non_gst_bill_invoice;
+        }
+        // dd($invoice_id);
+
+
+
+        for ($i = 0; $i < count($request->selectwt1); $i++) {
+            // $bill['invoice_id'] = 'BY16-' . $currentYear . $lastId + 1;
+            $bill['invoice_id'] = $invoice_id;
+            $bill['bill_type'] = $gst_bill;
+            $bill['bill_unique_id'] = $uniq_id;
+            $bill['bill_client_id'] = $client_id;
+            $bill['project_title'] = $request->project_title;
+            $bill['flag'] = 'original';
+            $bill['invoice_no'] = $non_gst_invoice_no;
+
+            // dd($wt2,$request->selectwt1[$i]);
+            $wt1_details = WorkType1::where('id', '=', $request->selectwt1[$i])->first();
+
+            $wt2_details = WorkType2::join('hsn_list', 'work_type_2.hsn_id', '=', 'hsn_list.hsn_id')->where('id', '=', $wt2[$i])->first();
+            // dd($wt2[$i],$wt2_details);
+            $bill['bill_work_type1'] = $wt1_details->wt_1_item;
+
+            if ($gst_bill == 'gst') {
+                if ($wt2_details) {
+                    $bill['wt1_id'] = $request->selectwt1[$i];
+                    $bill['wt2_id'] = $wt2[$i];
+
+                    $bill['bill_work_type2'] = $wt2_details->wt_2_item;
+                    $bill['hsn_code'] = $wt2_details->hsn_code;
+
+                    $bill['gst_rate'] = $wt2_details->gst;
+                    $bill['gst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst) / 100;
+
+
+
+                    $bill['cgst_rate'] = $wt2_details->gst / 2;
+                    $bill['cgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst / 2) / 100;
+
+                    $bill['sgst_rate'] = $wt2_details->gst / 2;
+                    $bill['sgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst / 2) / 100;
+
+                    $bill['igst_rate'] = $wt2_details->gst;
+                    $bill['igst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst) / 100;
+                } else {
+                    // dd($hsn_code);
+                    $bill['wt1_id'] = $request->selectwt1[$i];
+                    $bill['wt2_id'] = '';
+
+                    $bill['bill_work_type2'] = $wt2[$i];
+                    $bill['hsn_code'] = $hsn_code[$i];
+
+                    $bill['gst_rate'] = $request->other_gst[$i];
+                    $bill['gst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($request->other_gst[$i]) / 100;
+
+
+                    $bill['cgst_rate'] = $request->other_gst[$i] / 2;
+                    $bill['cgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($request->other_gst[$i] / 2) / 100;
+
+                    $bill['sgst_rate'] = $request->other_gst[$i] / 2;
+                    $bill['sgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($request->other_gst[$i] / 2) / 100;
+
+                    $bill['igst_rate'] = $request->other_gst[$i];
+                    $bill['igst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($request->other_gst[$i]) / 100;
+                }
+            } else {
+                if ($wt2_details) {
+                    $bill['wt1_id'] = $request->selectwt1[$i];
+                    $bill['wt2_id'] = $wt2[$i];
+
+                    $bill['bill_work_type2'] = $wt2_details->wt_2_item;
+                    $bill['hsn_code'] = $wt2_details->hsn_code;
+
+                    $bill['gst_rate'] = $wt2_details->gst;
+                    $bill['gst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst) / 100;
+
+
+
+                    $bill['cgst_rate'] = $wt2_details->gst / 2;
+                    $bill['cgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst / 2) / 100;
+
+                    $bill['sgst_rate'] = $wt2_details->gst / 2;
+                    $bill['sgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst / 2) / 100;
+
+                    $bill['igst_rate'] = $wt2_details->gst;
+                    $bill['igst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst) / 100;
+                } else {
+                    $bill['bill_work_type2'] = $wt2[$i];
+                    $bill['hsn_code'] = '';
+                    $bill['gst_rate'] = '';
+                    $bill['gst_amt'] = '';
+                    $bill['cgst_rate'] = '';
+                    $bill['cgst_amt'] = '';
+                    $bill['sgst_rate'] = '';
+                    $bill['sgst_amt'] = '';
+                    $bill['igst_rate'] = '';
+                    $bill['igst_amt'] = '';
+                    $bill['wt1_id'] = $request->selectwt1[$i];
+                    $bill['wt2_id'] = '';
+                }
+            }
+
+
+
+
+            // $bill['bill_work_type2_id'] = $request->selectwt2[$i];
+            $bill['quantity'] = $request->qty[$i];
+            $bill['rate'] = $request->input_rate[$i];
+            $bill['unit'] = $request->unit[$i];
+            $bill['description'] = $request->desc[$i];
+            $bill['total_amt'] = $request->input_rate[$i] * $request->qty[$i];
+            $bill['igst'] = $igst_bill;
+            $bill['status'] = '1';
+
+
+
+            $bill['bill_created_by'] = Auth::user()->id;
+            $bill['created_at'] = now();
+            // dd($bill);
+            // $data = ClientBill::insert($bill);
+            $data = BillClient::insert($bill);
+
+            $total_amount = $total_amount + ($request->input_rate[$i] * $request->qty[$i]);
+        }
+
+        // ===========================================================
+        BillGst::create([
+            'invoice_id' => $invoice_id,
+            'financial_year' => $financialYear,
+            'bill_unique_id' => $uniq_id,
+            'order_date' => $request->order_date,
+            'place_of_supply' => $request->place_of_supply,
+            'vehicle_no' => $request->vehicle_no,
+            'invoice_date' => $request->invoice_date,
+            'order_no' => $request->order_no,
+            'tax_reverse_charge' => $request->tax_reverse_charge,
+            'invoice_type' => $gst_bill,
+            'invoice_no' => $non_gst_invoice_no,
+            'total_amt' => $total_amount,
+        ]);
+        // ===========================================================
+
+        $bill_data = BillClient::where('bill_unique_id', $uniq_id)->get();
+        if (!$bill_data) {
+            return abort(404, 'Bill not found.');
+        }
+
+        // return redirect()->route('success.bill',['invoice_id' => $bill_data[0]->invoice_id, 'unique_id' => $bill_data[0]->bill_unique_id]);
+        $invoice_id = $bill_data[0]->invoice_id;
+        $unique_id = $bill_data[0]->bill_unique_id;
+        return redirect()->route('success.bill', ['invoice_id' => $invoice_id, 'unique_id' => $unique_id]);
+
+        // return view('component.success_bill', compact('invoice_id', 'unique_id'));
+    }
+
+
+
+
+    // ========================update bill==============================
+
+    public function update_bill(Request $request)
+    {
+        // dd($request);
+
+        if ($request->gst_bill) {
+            if ($request->igst) {
+                $gst_bill = 'gst';
+                $igst_bill = 'igst';
+            } else {
+                $gst_bill = 'gst';
+                $igst_bill = 'non igst';
+            }
+        } else {
+            $gst_bill = 'non gst';
+            $igst_bill = 'non igst';
+        }
+
+        $date = Carbon::parse($request->invoice_date);
+        $year = $date->year;
+
+        if ($date->month < 4) {
+            $startYear = $year - 1;
+            $endYear = $year;
+        } else {
+            $startYear = $year;
+            $endYear = $year + 1;
+        }
+
+        $financialYear = substr($startYear, -2) . '-' . substr($endYear, -2);
+
+        $old_bill_data = BillClient::where('bill_unique_id', '=', $request->billUniqueId)->get();
+        $old_gst_data = BillGst::where('bill_unique_id', '=', $request->billUniqueId)->first();
+        // dd($old_bill_data);
+        if ($old_bill_data[0]->bill_type == $gst_bill) {
+
+            $invoice_id = $old_bill_data[0]->invoice_id;
+            $financial_year = $old_gst_data->financial_year;
+            $invoice_date = $old_gst_data->invoice_date;
+            $bill_unique_id = $old_gst_data->bill_unique_id;
+            $non_gst_invoice_no = '';
+
+            if ($gst_bill == 'non gst') {
+                $non_gst_invoice_no = $old_gst_data->invoice_no;
+            }
+        } else {
+            if ($gst_bill == 'gst') {
+                $lastId = BillGst::where('financial_year', '=', $financialYear)->where('invoice_type', '=', 'gst')->count('gst_id');
+                $gst_lastId = $lastId + 1;
+                do {
+                    $invoice_id = 'B16/' . $financialYear . '/' . $gst_lastId;
+                    $invoice_no_check = BillGst::where('invoice_id', $invoice_id)->first();
+                    if ($invoice_no_check) {
+                        $gst_lastId++;
+                    }
+                } while ($invoice_no_check);
+
+                $non_gst_invoice_no = '';
+                $financial_year = $old_gst_data->financial_year;
+                $invoice_date = $old_gst_data->invoice_date;
+                $bill_unique_id = $old_gst_data->bill_unique_id;
+            } else {
+                $lastId = BillGst::where('financial_year', '=', $financialYear)->where('invoice_type', '=', 'non gst')->count('gst_id');
+                $non_gst_lastId = $lastId + 1;
+                do {
+                    $invoice_id = 'B16/' . $financialYear . '/' . $non_gst_lastId . '/' . $request->non_gst_bill_invoice_show;
+                    $invoice_no_check = BillGst::where('invoice_id', $invoice_id)->first();
+                    if ($invoice_no_check) {
+                        $non_gst_lastId++;
+                    }
+                } while ($invoice_no_check);
+                $non_gst_invoice_no = $request->non_gst_bill_invoice_show;
+                $financial_year = $old_gst_data->financial_year;
+                $invoice_date = $old_gst_data->invoice_date;
+                $bill_unique_id = $old_gst_data->bill_unique_id;
+                // $non_gst_invoice_no = $old_gst_data->bill_unique_id;
+            }
+        }
+        // dd($request->non_gst_bill_invoice_show, $invoice_id);
+
+        $bill_gst_data = BillGst::where('bill_unique_id', $request->billUniqueId)->first();
+        $wt2_assoc = array_filter($request->selectwt2);
+        $wt2 = array_values($wt2_assoc);
+
+
+        // $hsn_code_assoc = array_filter($request->hsn);
+        // $hsn_code = array_values($hsn_code_assoc);
+
+        // $hsn_code_assoc = array_filter($request->hsn ?? 0);
+        // $hsn_code = array_values($hsn_code_assoc);
+
+        $hsn_code = array_map(function ($value) {
+            return is_null($value) ? '0' : $value;
+        }, $request->hsn);
+
+
+        $gst_rate = array_map(function ($value) {
+            return is_null($value) ? '0' : $value;
+        }, $request->gst);
+
+        // dd($request->hsn,$hsn_code);
+
+
+
+        // $gst_rate_assoc = array_filter($request->gst);
+        // $gst_rate = array_values($gst_rate_assoc);
+
+
+        if (count($request->qty) > 0) {
+            if (in_array(null, $request->qty, true)) {
+                return back()->with('error', 'One or more quantity values are missing.');
+            }
+        }
+
+        if (count($request->input_rate) > 0) {
+            if (in_array(null, $request->input_rate, true)) {
+                return back()->with('error', 'One or more rate values are missing.');
+            }
+        }
+
+        if (count($request->unit) > 0) {
+            if (in_array(null, $request->unit, true)) {
+                return back()->with('error', 'One or more unit values are missing.');
+            }
+        }
+
+
+        // $uniq_id = $this->generateUniqueId();
+
+        if (!$request->selectclient) {
+            $client = ClientDetails::create([
+                'name'         => $request->client_name,
+                'ph_no'        => $request->ph_no,
+                'email'        => $request->email,
+                'pan_no'       => $request->pan_no,
+                'gst_no'       => $request->gst_no,
+                'address'      => $request->address,
+                'created_by'   => Auth::user()->id,
+                'company_name' => $request->company_name,
+            ]);
+
+            $client_id = $client->id;
+        } else {
+            $client_id = $request->selectclient;
+        }
+
+        $total_amount = 0;
+        $currentYear = Carbon::now()->year;
+
+        for ($i = 0; $i < count($request->selectwt1); $i++) {
+            // $bill['invoice_id'] = 'BY16-' . $currentYear . $lastId + 1;
+            $bill['invoice_id'] = $invoice_id;
+            $bill['bill_type'] = $gst_bill;
+            $bill['bill_unique_id'] = $bill_unique_id;
+            $bill['bill_client_id'] = $client_id;
+            $bill['project_title'] = $request->project_title;
+            $bill['flag'] = 'original';
+            $bill['invoice_no'] = $non_gst_invoice_no;
+
+
+            $wt1_details = WorkType1::where('id', '=', $request->selectwt1[$i])->first();
+
+            $wt2_details = WorkType2::join('hsn_list', 'work_type_2.hsn_id', '=', 'hsn_list.hsn_id')->where('id', '=', $wt2[$i])->first();
+
+            $bill['bill_work_type1'] = $wt1_details->wt_1_item;
+            // dd($wt2_details, $wt2, $hsn_code);
+            if ($gst_bill == 'gst') {
+                if ($wt2_details) {
+                    $bill['wt1_id'] = $request->selectwt1[$i];
+                    $bill['wt2_id'] = $wt2[$i];
+
+                    $bill['bill_work_type2'] = $wt2_details->wt_2_item;
+                    $bill['hsn_code'] = $wt2_details->hsn_code;
+
+                    $bill['gst_rate'] = $wt2_details->gst;
+                    $bill['gst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst) / 100;
+
+
+
+                    $bill['cgst_rate'] = $wt2_details->gst / 2;
+                    $bill['cgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst / 2) / 100;
+
+                    $bill['sgst_rate'] = $wt2_details->gst / 2;
+                    $bill['sgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst / 2) / 100;
+
+                    $bill['igst_rate'] = $wt2_details->gst;
+                    $bill['igst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst) / 100;
+                } else {
+                    $bill['wt1_id'] = $request->selectwt1[$i];
+                    $bill['wt2_id'] = '';
+                    $bill['bill_work_type2'] = $wt2[$i];
+                    $bill['hsn_code'] = $hsn_code[$i];
+
+                    // $bill['gst_rate'] = $request->other_gst[$i];
+                    $bill['gst_rate'] = $gst_rate[$i];
+
+                    $bill['gst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($gst_rate[$i]) / 100;
+
+
+                    $bill['cgst_rate'] = $gst_rate[$i] / 2;
+                    $bill['cgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($gst_rate[$i] / 2) / 100;
+
+                    $bill['sgst_rate'] = $gst_rate[$i] / 2;
+                    $bill['sgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($gst_rate[$i] / 2) / 100;
+
+                    $bill['igst_rate'] = $gst_rate[$i];
+                    $bill['igst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($gst_rate[$i]) / 100;
+                }
+            } else {
+                if ($wt2_details) {
+                    $bill['wt1_id'] = $request->selectwt1[$i];
+                    $bill['wt2_id'] = $wt2[$i];
+
+                    $bill['bill_work_type2'] = $wt2_details->wt_2_item;
+                    $bill['hsn_code'] = $wt2_details->hsn_code;
+
+                    $bill['gst_rate'] = $wt2_details->gst;
+                    $bill['gst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst) / 100;
+
+
+
+                    $bill['cgst_rate'] = $wt2_details->gst / 2;
+                    $bill['cgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst / 2) / 100;
+
+                    $bill['sgst_rate'] = $wt2_details->gst / 2;
+                    $bill['sgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst / 2) / 100;
+
+                    $bill['igst_rate'] = $wt2_details->gst;
+                    $bill['igst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($wt2_details->gst) / 100;
+                } else {
+                    // dd($hsn_code);
+                    $bill['bill_work_type2'] = $wt2[$i];
+                    // $bill['hsn_code'] = $hsn_code[$i];
+                    // $bill['gst_rate'] = $request->other_gst[$i];
+                    // $bill['gst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($request->other_gst[$i]) / 100;
+
+
+                    // $bill['cgst_rate'] = $request->other_gst[$i] / 2;
+                    // $bill['cgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($request->other_gst[$i] / 2) / 100;
+
+                    // $bill['sgst_rate'] = $request->other_gst[$i] / 2;
+                    // $bill['sgst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($request->other_gst[$i] / 2) / 100;
+
+                    // $bill['igst_rate'] = $request->other_gst[$i];
+                    // $bill['igst_amt'] = ($request->input_rate[$i] * $request->qty[$i]) * ($request->other_gst[$i]) / 100;
+
+                    $bill['hsn_code'] = '';
+                    $bill['gst_rate'] = '';
+                    $bill['gst_amt'] = '';
+
+
+                    $bill['cgst_rate'] = '';
+                    $bill['cgst_amt'] = '';
+
+                    $bill['sgst_rate'] = '';
+                    $bill['sgst_amt'] = '';
+
+                    $bill['igst_rate'] = '';
+                    $bill['igst_amt'] = '';
+                    $bill['wt1_id'] = $request->selectwt1[$i];
+                    $bill['wt2_id'] = '';
+                }
+            }
+
+
+
+
+            // $bill['bill_work_type2_id'] = $request->selectwt2[$i];
+            $bill['quantity'] = $request->qty[$i];
+            $bill['rate'] = $request->input_rate[$i];
+            $bill['unit'] = $request->unit[$i];
+            $bill['description'] = $request->desc[$i];
+            $bill['total_amt'] = $request->input_rate[$i] * $request->qty[$i];
+            $bill['igst'] = $igst_bill;
+            $bill['status'] = '1';
+
+
+            $bill['bill_created_by'] = Auth::user()->id;
+            $bill['created_at'] = now();
+            $data = BillClient::insert($bill);
+
+            $total_amount = $total_amount + ($request->input_rate[$i] * $request->qty[$i]);
+        }
+
+        // dd($total_amount);
+
+        // ===========================================================
+
+        // $total_gst_amt = 0;
+        // $sgst_amt = 0;
+        // $cgst_amt = 0;
+        // $igst_amt = 0;
+        // if($request->gst_bill){
+        //     if($request->igst == null){
+        //         $sgst_amt = $total_amount*$request->sgst/100;
+        //         $cgst_amt = $total_amount*$request->cgst/100;
+        //         $igst_amt = 0;
+        //         $total_gst_amt = $sgst_amt + $cgst_amt;
+        //     }else{
+        //         $igst_amt = $total_amount*$request->igst/100;
+        //         $sgst_amt = 0;
+        //         $cgst_amt = 0;
+        //         $total_gst_amt = $igst_amt;
+        //     }
+        // }
+
+        // dd($request->non_gst_bill_invoice);
+
+        BillGst::create([
+            'invoice_id' => $invoice_id,
+            'financial_year' => $financialYear,
+            'bill_unique_id' => $bill_unique_id,
+            'order_date' => $request->order_date,
+            'place_of_supply' => $request->place_of_supply,
+            'vehicle_no' => $request->vehicle_no,
+            'invoice_date' => $old_gst_data->invoice_date,
+            'order_no' => $request->order_no,
+            'tax_reverse_charge' => $request->tax_reverse_charge,
+            'invoice_type' => $gst_bill,
+            'invoice_no' => $non_gst_invoice_no,
+
+            // 'cgst_percentage' => $request->cgst,
+            // 'sgst_percentage' => $request->sgst,
+            // 'igst_percentage' => $request->igst,
+            'total_amt' => $total_amount,
+            // 'sgst_amt' => $sgst_amt,
+            // 'cgst_amt' => $cgst_amt,
+            // 'igst_amt' => $igst_amt,
+            // 'total_gst_amt' => $total_gst_amt,
+            // 'net_total' => $total_amount+$total_gst_amt,
+
+        ]);
+
+        // $bill_data = ClientBill::join('work_type_2', 'client_bill.bill_work_type2_id', '=', 'work_type_2.id')->join('work_type_1', 'work_type_2.wt_1_id', '=', 'work_type_1.id')->where('bill_unique_id', $uniq_id)->get();
+
+        // ===========================================================
+
+        $bill_data = BillClient::where('bill_unique_id', $bill_unique_id)->orderby('id', 'desc')->get();
+        // dd($bill_data);
+        // $client_data = ClientDetails::where('id', '=', $bill_data[0]->bill_client_id)->first();
+
+        if (!$bill_data) {
+            return abort(404, 'Bill not found.');
+        }
+
+        // $gst_data = BillGst::where('bill_unique_id', '=',  $uniq_id)->first();
+
+
+        // $pdf = Pdf::loadView('pdf.pdf_view', compact('bill_data', 'client_data'));
+        // return $pdf->stream('bill_' . $bill_data[0]->invoice_id . '.pdf');
+        // $request['unique_id'] = $uniq_id;
+
+        // $this->print_bill($request);
+
+        // $pdf = Pdf::loadView('pdf.bill_pdf', compact('bill_data', 'client_data', 'gst_data'));
+        // // return $pdf->stream('bill_' . $bill_data[0]->invoice_id . '.pdf');
+
+        // $filename = 'bill_' . $bill_data[0]->invoice_id . '.pdf';
+
+        // Return the PDF with headers that will force download in new tab
+        // return $pdf->stream($filename, [
+        //     'Content-Disposition' => 'inline; filename="'.$filename.'"'
+        // ]);
+
+        // return view('pdf.bill_pdf', [
+        //     'invoice_id' => $bill_data[0]->invoice_id,
+        //     'unique_id' => $uniq_id
+        // ]);
+
+        // return redirect()->route('success.bill',['invoice_id' => $bill_data[0]->invoice_id, 'unique_id' => $bill_data[0]->bill_unique_id]);
+        // dd($bill_data);
+        $invoice_id = $bill_data[0]->invoice_id;
+        $unique_id = $bill_data[0]->bill_unique_id;
+
+
+        // foreach($bill_gst_data as $gst_data){
+        //     $gst_data->delete();
+        // }
+        BillGst::where('gst_id', $bill_gst_data->gst_id)->delete();
+        foreach ($old_bill_data as $bill_data1) {
+            $bill_data1->delete();
+        }
+
+        return redirect()->route('success.bill', ['invoice_id' => $invoice_id, 'unique_id' => $unique_id]);
+
+        // return view('component.success_bill', compact('invoice_id', 'unique_id'));
+    }
+
+    // ========================update bill==============================
+
+
+
+    public function success_bill(Request $request)
+    {
+        // dd($request);
+
+        $invoice_id = $request->query('invoice_id');
+        $unique_id = $request->query('unique_id');
+
+        return view('component.success_bill', compact('invoice_id', 'unique_id'));
+    }
+
+
+    // public function bill_list()
+    // {
+    //     // dd(Auth::user()->role);
+    //     if (Auth::user()->role == "admin") {
+    //         $all_bill_list = ClientBill::join('client_details', 'client_bill.bill_client_id', '=', 'client_details.id')
+    //             ->select(
+    //                 'client_details.name',
+    //                 'client_bill.project_title',
+    //                 'client_bill.invoice_id',
+    //                 'client_bill.bill_unique_id',
+    //                 'client_bill.bill_type',
+    //                 'client_bill.flag',
+    //                 'client_bill.created_at',
+    //                 'client_bill.status',
+    //                 DB::raw('SUM(client_bill.total_amt) as total_amount')
+    //             )
+    //             ->where('client_bill.status', '=', '1')
+    //             ->groupBy(
+    //                 'client_bill.bill_unique_id',
+    //                 'client_bill.invoice_id',
+    //                 'client_details.name',
+    //                 'client_bill.project_title',
+    //                 'client_bill.bill_type',
+    //                 'client_bill.flag',
+    //                 'client_bill.created_at',
+    //                 'client_bill.status',
+    //             )
+    //             ->get();
+    //     } else if (Auth::user()->role == "user") {
+    //         $all_bill_list = ClientBill::join('client_details', 'client_bill.bill_client_id', '=', 'client_details.id')
+    //             ->select(
+    //                 'client_details.name',
+    //                 'client_bill.project_title',
+    //                 'client_bill.invoice_id',
+    //                 'client_bill.bill_unique_id',
+    //                 'client_bill.bill_type',
+    //                 'client_bill.flag',
+    //                 'client_bill.created_at',
+    //                 'client_bill.status',
+
+
+    //                 DB::raw('SUM(client_bill.total_amt) as total_amount')
+    //             )
+    //             ->where('client_bill.bill_created_by', '=', Auth::user()->id)
+    //             ->where('client_bill.status', '=', '1')
+    //             ->groupBy(
+    //                 'client_bill.bill_unique_id',
+    //                 'client_bill.invoice_id',
+    //                 'client_details.name',
+    //                 'client_bill.project_title',
+    //                 'client_bill.bill_type',
+    //                 'client_bill.flag',
+    //                 'client_bill.created_at',
+    //                 'client_bill.status',
+    //             )
+    //             ->get();
+    //     }
+    //     // dd($all_bill_list[10]->status=='0');
+    //     return view('component.bill-list', compact('all_bill_list'));
+    // }
+
+
+    public function bill_list()
+    {
+        // dd(Auth::user()->role);
+        if (Auth::user()->role == "admin") {
+            $all_bill_list = BillClient::join('client_details', 'bill_client.bill_client_id', '=', 'client_details.id')
+                ->select(
+                    'client_details.name',
+                    'client_details.company_name',
+                    'bill_client.project_title',
+                    'bill_client.invoice_id',
+                    'bill_client.bill_unique_id',
+                    'bill_client.bill_type',
+                    'bill_client.flag',
+                    'bill_client.created_at',
+                    'bill_client.status',
+                    DB::raw('SUM(bill_client.total_amt) as total_amount'),
+                    DB::raw('SUM(bill_client.gst_amt) as total_gst_amount')
+
+                )
+                ->where('bill_client.status', '=', '1')
+                ->groupBy(
+                    'bill_client.bill_unique_id',
+                    'bill_client.invoice_id',
+                    'client_details.name',
+                    'client_details.company_name',
+                    'bill_client.project_title',
+                    'bill_client.bill_type',
+                    'bill_client.flag',
+                    'bill_client.created_at',
+                    'bill_client.status',
+
+                )
+                ->get();
+        } else if (Auth::user()->role == "user") {
+            $all_bill_list = BillClient::join('client_details', 'bill_client.bill_client_id', '=', 'client_details.id')
+                ->select(
+                    'client_details.name',
+                    'client_details.company_name',
+                    'bill_client.project_title',
+                    'bill_client.invoice_id',
+                    'bill_client.bill_unique_id',
+                    'bill_client.bill_type',
+                    'bill_client.flag',
+                    'bill_client.created_at',
+                    'bill_client.status',
+
+
+                    DB::raw('SUM(bill_client.total_amt) as total_amount'),
+                    DB::raw('SUM(bill_client.gst_amt) as total_gst_amount')
+                )
+                ->where('bill_client.bill_created_by', '=', Auth::user()->id)
+                ->where('bill_client.status', '=', '1')
+                ->groupBy(
+                    'bill_client.bill_unique_id',
+                    'bill_client.invoice_id',
+                    'client_details.name',
+                    'client_details.company_name',
+                    'bill_client.project_title',
+                    'bill_client.bill_type',
+                    'bill_client.flag',
+                    'bill_client.created_at',
+                    'bill_client.status',
+                )
+                ->get();
+        }
+        // dd($all_bill_list);
+        return view('component.bill-list', compact('all_bill_list'));
+    }
+
+    public function bill_data(Request $request)
+    {
+        // dd($request);
+        $bill_data = ClientBill::select('client_bill.id', 'client_bill.invoice_id', 'client_bill.bill_client_id', 'client_bill.bill_unique_id', 'work_type_2.wt_2_item', 'client_bill.quantity', 'client_bill.rate')->join('work_type_2', 'client_bill.bill_work_type2_id', '=', 'work_type_2.id')->join('work_type_1', 'work_type_2.wt_1_id', '=', 'work_type_1.id')->where('bill_unique_id', '=', $request->bill_unique_id)->get();
+
+        $bill_data = BillClient::where('bill_unique_id', '=', $request->bill_unique_id)->get();
+
+        // dd($bill_data);
+
+        return response()->json([
+            'bill_data' => $bill_data,
+        ]);
+    }
+
+    // public function duplicate_bill_save(Request $request)
+    // {
+    //     dd($request);
+    //     $combile_data = array_combine($request->bill_id, $request->dup_rate);
+    //     // dd($combile_data);
+    //     $total_amount = 0;
+    //     foreach ($combile_data as $key => $value) {
+    //         $original_bill = ClientBill::where('id', '=', $key)->first();
+
+
+    //         $new = $original_bill->replicate();
+    //         $original_gst_bill = BillGst::where('invoice_id', $new->invoice_id)->first();
+
+    //         $new->invoice_id = $original_bill->invoice_id . "_D";
+    //         $new->bill_unique_id = $original_bill->bill_unique_id . "_D";
+    //         $new->rate = $value;
+    //         $new->flag = 'duplicate';
+    //         $new->total_amt = $value * $original_bill->quantity;
+    //         $new->created_at = now();
+    //         $new->updated_at = now();
+    //         $new->save();
+
+    //         $total_amount = $total_amount + $value * $original_bill->quantity;
+    //     }
+
+    //     // dd($original_gst_bill);
+    //     $gst_data = BillGst::where('gst_id', $original_gst_bill->gst_id)->first();
+    //     $newGst = $gst_data->replicate();
+    //     $newGst->invoice_id = $gst_data->invoice_id . "_D";
+    //     $newGst->bill_unique_id = $gst_data->bill_unique_id . "_D";
+    //     $newGst->total_amt = $total_amount;
+    //     if ($newGst->cgst_percentage) {
+    //         $newGst->cgst_amt = $total_amount * $newGst->cgst_percentage / 100;
+    //     }
+    //     if ($newGst->sgst_percentage) {
+    //         $newGst->sgst_amt = $total_amount * $newGst->sgst_percentage / 100;
+    //     }
+    //     if ($newGst->igst_percentage) {
+    //         $newGst->igst_amt = $total_amount * $newGst->igst_percentage / 100;
+    //     }
+    //     $newGst->total_gst_amt = $newGst->cgst_amt + $newGst->sgst_amt + $newGst->igst_amt;
+    //     $newGst->net_total = $newGst->total_gst_amt + $total_amount;
+    //     $newGst->gst_id = null;
+
+    //     // dd($newGst);
+    //     $newGst->save();
+
+
+
+    //     // BillGst::create([
+    //     //     'invoice_id' => 'BY16-' . $currentYear.$last_id+1,
+    //     //     'bill_unique_id' => $uniq_id,
+    //     //     'cgst_percentage' => $request->cgst,
+    //     //     'sgst_percentage' => $request->sgst,
+    //     //     'igst_percentage' => $request->igst,
+    //     //     'total_amt' => $total_amount,
+    //     //     'sgst_amt' => $sgst_amt,
+    //     //     'cgst_amt' => $cgst_amt,
+    //     //     'igst_amt' => $igst_amt,
+    //     //     'total_gst_amt' => $total_gst_amt,
+    //     //     'net_total' => $total_amount+$total_gst_amt,
+
+    //     // ]);
+
+    //     return redirect()->back()->with('success', 'successful');
+    // }
+
+
+    public function duplicate_bill_save(Request $request)
+    {
+        // dd($request);
+        $combile_data = array_combine($request->bill_id, $request->dup_rate);
+        // dd($combile_data);
+        $total_amount = 0;
+        foreach ($combile_data as $key => $value) {
+            $original_bill = BillClient::where('id', '=', $key)->first();
+            $new = $original_bill->replicate();
+            $original_gst_bill = BillGst::where('invoice_id', $new->invoice_id)->first();
+
+            $new->invoice_id = $original_bill->invoice_id . "_D";
+            $new->bill_unique_id = $original_bill->bill_unique_id . "_D";
+            $new->rate = $value;
+            $new->flag = 'duplicate';
+            $new->total_amt = $value * $original_bill->quantity;
+
+
+            $new->cgst_amt = ($value * $original_bill->quantity) * $original_bill->cgst_rate / 100;
+            $new->sgst_amt = ($value * $original_bill->quantity) * $original_bill->sgst_rate / 100;
+            $new->igst_amt = ($value * $original_bill->quantity) * $original_bill->igst_rate / 100;
+
+            $new->gst_amt = ($value * $original_bill->quantity) * $original_bill->gst_rate / 100;
+
+            $new->created_at = now();
+            $new->updated_at = now();
+            $new->save();
+            $total_amount = $total_amount + $value * $original_bill->quantity;
+        }
+
+        // dd($original_gst_bill);
+        $gst_data = BillGst::where('gst_id', $original_gst_bill->gst_id)->first();
+        $newGst = $gst_data->replicate();
+        // dd()
+        $newGst->invoice_id = $gst_data->invoice_id . "_D";
+        $newGst->bill_unique_id = $gst_data->bill_unique_id . "_D";
+        $newGst->total_amt = $total_amount;
+        // if ($newGst->cgst_percentage) {
+        //     $newGst->cgst_amt = $total_amount * $newGst->cgst_percentage / 100;
+        // }
+        // if ($newGst->sgst_percentage) {
+        //     $newGst->sgst_amt = $total_amount * $newGst->sgst_percentage / 100;
+        // }
+        // if ($newGst->igst_percentage) {
+        //     $newGst->igst_amt = $total_amount * $newGst->igst_percentage / 100;
+        // }
+        // $newGst->total_gst_amt = $newGst->cgst_amt + $newGst->sgst_amt + $newGst->igst_amt;
+        // $newGst->net_total = $newGst->total_gst_amt + $total_amount;
+        $newGst->gst_id = null;
+
+        // // dd($newGst);
+        $newGst->save();
+
+
+
+
+
+        return redirect()->back()->with('success', 'successful');
+    }
+
+
+    public function delete_bill(Request $request)
+    {
+        $deleted_bill = BillClient::where('bill_unique_id', '=', $request->unique_id)->get();
+        // dd($deleted_bill);
+        foreach ($deleted_bill as $bill) {
+            $bill_data = BillClient::find($bill->id);
+            $bill_data->status = 0;
+            $bill_data->save();
+        }
+
+        return redirect()->back();
+    }
+
+    public function print_bill(Request $request)
+    {
+
+        $bill_amt = BillClient::where('bill_unique_id', $request->unique_id)->sum('total_amt');
+        // dd($bill_amt);
+        $auth_data = Auth::user();
+        // $bill_data = ClientBill::join('work_type_2', 'client_bill.bill_work_type2_id', '=', 'work_type_2.id')->join('work_type_1', 'work_type_2.wt_1_id', '=', 'work_type_1.id')->where('bill_unique_id', $request->unique_id)->get();
+
+        $cgst_data = [];
+        $sgst_data = [];
+        $igst_data = [];
+        $gst_data = [];
+
+
+
+
+        $bill_data = BillClient::where('bill_unique_id', $request->unique_id)->get();
+
+        if ($bill_data[0]->bill_type == 'gst') {
+            // if ($bill_data[0]->igst == 'non igst') {
+            //     $cgst_data = BillClient::select('cgst_rate', DB::raw('SUM(cgst_amt) as total_cgst_amt'))
+            //     ->where('bill_unique_id', $request->unique_id)
+            //     ->groupBy('cgst_rate')
+            //     ->get();
+
+            //     $sgst_data = BillClient::select('sgst_rate', DB::raw('SUM(sgst_amt) as total_sgst_amt'))
+            //         ->where('bill_unique_id', $request->unique_id)
+            //         ->groupBy('sgst_rate')
+            //         ->get();
+            // }else{
+            // $igst_data = BillClient::select('igst_rate', DB::raw('SUM(igst_amt) as total_igst_amt'), DB::raw('SUM(total_amt) as total_amt'))
+            //     ->where('bill_unique_id', $request->unique_id)
+            //     ->groupBy('igst_rate')
+            //     ->get();
+
+            $gst_data = BillClient::select('gst_rate', DB::raw('SUM(gst_amt) as gst_amt'), DB::raw('SUM(total_amt) as total_amt'))
+                ->where('bill_unique_id', $request->unique_id)
+                ->groupBy('gst_rate')
+                ->get();
+            // }
+        }
+        // dd($igst_data);
+
+        $client_data = ClientDetails::where('id', '=', $bill_data[0]->bill_client_id)->first();
+
+        $order_data = BillGst::where('bill_unique_id', '=', $request->unique_id)->first();
+
+        // dd($client_data);
+
+        //$gst_data = BillGst::where('bill_unique_id', '=',  $request->unique_id)->first();
+
+        if (!$bill_data) {
+            return abort(404, 'Bill not found.');
+        }
+        // dd($cgst_data, $sgst_data, $igst_data);
+
+        // return view('pdf.invoicePdf', compact('bill_data', 'client_data', 'auth_data', 'bill_amt', 'gst_data', 'order_data'));
+
+        $pdf = Pdf::loadView('pdf.invoicePdf', compact('bill_data', 'client_data', 'auth_data', 'bill_amt', 'gst_data', 'order_data'));
+        // return $pdf->stream('bill_' . $bill_data[0]->invoice_id . '.pdf');
+
+        return $pdf->stream('bill_' . $bill_data[0]->bill_unique_id . '.pdf');
+        // dd($bill_data);
+
+        // $pdf = Pdf::loadView('pdf.pdf_view', compact('bill_data', 'client_data'));
+        // return $pdf->stream('bill_' . $bill_data[0]->invoice_id . '.pdf');
+    }
+
+    public function client_search(Request $request)
+    {
+        // dd($request);
+        $search = $request->get('searchData');
+
+        $users = ClientDetails::where('name', 'LIKE', "$search%")
+            ->orWhere('email', 'LIKE', "$search%")
+            ->limit(10)
+            ->get();
+
+        // dd($users);
+
+        return response()->json($users);
+    }
+
+    public function bill_view(Request $request)
+    {
+        // dd($request);
+        $bill_data = ClientBill::join('work_type_2', 'client_bill.bill_work_type2_id', '=', 'work_type_2.id')->join('work_type_1', 'work_type_2.wt_1_id', '=', 'work_type_1.id')->where('bill_unique_id', $request->unique_id)->get();
+
+
+        $bill_data = BillClient::where('bill_unique_id', $request->unique_id)->get();
+
+
+
+        $client_data = ClientDetails::where('id', '=', $bill_data[0]->bill_client_id)->first();
+        // dd($client_data);
+
+        // $gst_data = BillGst::where('bill_unique_id', '=',  $request->unique_id)->first();
+
+        if (!$bill_data) {
+            return abort(404, 'Bill not found.');
+        }
+
+        // dd($gst_data);
+        return response()->json([
+            'bill_datas' => $bill_data,
+            'client_data' => $client_data,
+        ]);
+    }
+
+    public function user_list()
+    {
+        // $user_data = User::where('id', '!=', Auth::id())->get();
+        $user_data = User::all();
+        return view('component.user-list', compact('user_data'));
+    }
+
+    public function update_user_status(Request $request)
+    {
+        $update_status = User::find($request->user_id);
+        $update_status->status = $request->status;
+        $update_status->save();
+    }
+
+    public function deleted_bill_list()
+    {
+        if (Auth::user()->role == "admin") {
+            $deleted_bill_list = BillClient::join('client_details', 'bill_client.bill_client_id', '=', 'client_details.id')
+                ->select(
+                    'client_details.name',
+                    'bill_client.project_title',
+                    'bill_client.invoice_id',
+                    'bill_client.bill_unique_id',
+                    'bill_client.bill_type',
+                    'bill_client.flag',
+                    'bill_client.created_at',
+                    'bill_client.status',
+                    DB::raw('SUM(bill_client.total_amt) as total_amount')
+                )
+                ->where('bill_client.status', '=', '0')
+                ->groupBy(
+                    'bill_client.bill_unique_id',
+                    'bill_client.invoice_id',
+                    'client_details.name',
+                    'bill_client.project_title',
+                    'bill_client.bill_type',
+                    'bill_client.flag',
+                    'bill_client.created_at',
+                    'bill_client.status',
+                )
+                ->get();
+            // dd($deleted_bill_list);
+        } else if (Auth::user()->role == "user") {
+            $deleted_bill_list = BillClient::join('client_details', 'bill_client.bill_client_id', '=', 'client_details.id')
+                ->select(
+                    'client_details.name',
+                    'bill_client.project_title',
+                    'bill_client.invoice_id',
+                    'bill_client.bill_unique_id',
+                    'bill_client.bill_type',
+                    'bill_client.flag',
+                    'bill_client.created_at',
+                    'bill_client.status',
+
+
+                    DB::raw('SUM(bill_client.total_amt) as total_amount')
+                )
+                ->where('bill_client.bill_created_by', '=', Auth::user()->id)
+                ->where('bill_client.status', '=', '0')
+                ->groupBy(
+                    'bill_client.bill_unique_id',
+                    'bill_client.invoice_id',
+                    'client_details.name',
+                    'bill_client.project_title',
+                    'bill_client.bill_type',
+                    'bill_client.flag',
+                    'bill_client.created_at',
+                    'bill_client.status',
+                )
+                ->get();
+        }
+        return view('component.deleted-bill-list', compact('deleted_bill_list'));
+    }
+
+    public function update_user(Request $request)
+    {
+        $user_data = User::find($request->user_id);
+        if ($request->edit_user_status) {
+            $user_data->status = '1';
+        } else {
+            $user_data->status = '0';
+        }
+        if ($request->password) {
+            $user_data->password = Hash::make($request->user_password);
+        }
+
+        $user_data->name = $request->user_name;
+        $user_data->role = $request->user_role;
+
+
+        if ($request->hasFile('user_sign')) {
+            $file = $request->file('user_sign');
+            $filename = time() . '_' . $request->user_id . '.webp';
+            $file->move(public_path('uploads/signatures'), $filename);
+            $user_data->signature = $filename;
+        }
+
+        $user_data->save();
+
+        return redirect()->back();
+    }
+
+    public function edit_bill(Request $request)
+    {
+        // dd($request);
+        $edit_bill_details = BillClient::join('client_details', 'bill_client.bill_client_id', '=', 'client_details.id')->join('bill_gst', 'bill_client.bill_unique_id', '=', 'bill_gst.bill_unique_id')->where('bill_client.bill_unique_id', '=', $request->unique_id)->get();
+        $all_client = ClientDetails::all();
+        $work_type1_data = WorkType1::all();
+        // dd($work_type1_data);
+        return view('component.edit-bill', compact('work_type1_data', 'all_client', 'edit_bill_details'));
+    }
+}

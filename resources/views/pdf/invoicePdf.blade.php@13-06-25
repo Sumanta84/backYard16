@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Structural Members Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fredoka:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Russo+One&family=Sora:wght@100..800&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+
+    <style>
+        .content_wrapper {
+            max-width: 1025px;
+            margin: auto;
+            border: 1px solid #000;
+        }
+
+        body {
+            font-family: "Poppins", sans-serif;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .table_footer th,
+        td {
+            border: 1px solid black;
+            padding: 0px;
+        }
+
+        .table_footer th {
+            background: #f2f2f2;
+        }
+
+        input.form-control {
+            width: 180%;
+            height: 38px;
+            border-radius: 5px;
+            border: 1px solid #adadad;
+            background: #b3c1ca78;
+            padding-left: 12px;
+        }
+
+        .colum {
+            border: 1px solid #6a6a6a;
+            margin: 5px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 17px;
+            color: #6a6a6a;
+        }
+
+        .button_box {
+            border: 1px solid #807d7d;
+            padding: 10px 40px;
+            border-radius: 4px;
+            height: 20px;
+        }
+
+        td {
+            padding: 3px 3px 1px 3px;
+            font-size: 12px;
+
+        }
+
+        @page teacher {
+            size: A4 portrait;
+            margin: 1cm;
+        }
+
+        .teacherPage {
+            page: teacher;
+            page-break-after: always;
+        }
+
+        .teacherPage:last-child {
+            page-break-after: unset;
+        }
+    </style>
+</head>
+
+<body>
+
+    @php
+    $net_total = 0;
+    $net_qty = 0;
+    @endphp
+
+    @if($bill_data[0]->bill_type == 'non gst')
+    @php
+    $per_page_data = 11;
+    @endphp
+    @else
+    @php
+    $per_page_data = 9;
+    @endphp
+    @endif
+
+    <?php
+    $page_no = 1;
+    $pages = (int)ceil(count($bill_data) / $per_page_data);
+    for ($i = count($bill_data); $i > 0; $i = $i - $per_page_data) {
+    ?>
+
+
+
+        <!-- ============= Project Section Start ============== -->
+        <section class="project_details teacherPage" style="">
+
+            <div class="content_wrapper" style="position: relative;">
+
+                <img src="/home/backyard16/public_html/public/assets/img/logo/LOGO_SUBMARK4.jpeg" alt="image" style="
+              height: 350px;
+    width: 550px;
+    position: absolute;
+    display: table;
+    margin: auto;
+    opacity: 0.1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+                ">
+
+
+                <table>
+                    <tr>
+                        <td style="border: none;"><img src="{{public_path('/assets/img/logo/backyard16.webp')}}" alt="" title="" loading="lazy" height="60px" width="250px"></td>
+                    </tr>
+                    <tr>
+                        <td style="border: none;"><b>Address:</b>159/12,N.S.C. Bose Road,Kolkata-700040.</td>
+                    </tr>
+                    <tr>
+                        <td style="border: none;">
+                            <b>Contact no:</b> 9874816447 / 7003805353.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none;"><b>Email:</b> backyard16official@gmail.com </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none;"><b>GSTIN:</b> 19ABCFB7205K1ZE <b>State Code:</b> 19 West Bengal <b>PAN:</b> ABCFB7205K</td>
+                    </tr>
+                    <tr>
+                        <td style="border: none;">
+                            <span style="background: red; display: inline-block; width: 100px; height: 2px;    position: relative; top: -3px;"></span>
+                            <b> WWW.BACKYARD16.COM</b>
+                            <span style="background: red; display: inline-block; width: 100px; height: 2px;    position: relative; top: -3px;"></span>
+                        </td>
+                    </tr>
+
+
+                </table>
+
+
+                <table>
+                    <tr>
+
+                        <td style="border: none; border-top: 1px solid #000; border-bottom: 1px solid #000; text-align:right; width: 55%;"><b>TAX INVOICE</b></td>
+                        <td style="border: none; border-top: 1px solid #000; border-bottom: 1px solid #000; text-align: right;padding-right:10px;"><b>ORIGINAL For Recipient</b></td>
+                    </tr>
+                </table>
+
+                <table>
+                    <tr>
+                        <td style="text-align: left; border: none; width:49.9%;">
+                            <b style="padding-bottom: 3px; display: inline-block;">Bill To</b>
+                            <br>
+                            <b style="padding-bottom: 3px; display: inline-block;">M/S: {{$client_data->name}}</b>
+                            <br>
+                            <span style="padding-bottom: 3px; display: inline-block;">{{$client_data->address}}</span>
+                            <br>
+                            <!-- <span>WEAT BENGAL</span>
+                        <br> -->
+                            <span style="padding-bottom: 3px; display: inline-block;">MOB: {{$client_data->ph_no}}</span>
+                            <br>
+                            <span style="padding-bottom: 3px; display: inline-block;">PAN: {{$client_data->pan_no}}</span>
+                            <br>
+                            <span style="padding-bottom: 3px; display: inline-block;"><b>GSTIN/UIN:</b> {{$client_data->gst_no}}</span>
+                            <!-- <br>
+                        <span><b>STATE:</b>West Bengal</span>
+                        <br>
+                        <span><b>STATE CODE:</b>19</span>-->
+                            <br>
+                            <span style="padding-bottom: 3px; display: inline-block;">Tax is payble on reverse charge basis (Yes/No): {{$order_data->tax_reverse_charge}}</span>
+                        </td>
+                        <td style="text-align: left; border: none; border-left: 1px solid #000; width: 50%;">
+                            <span style="padding-bottom: 3px; display: inline-block;"><b>Invoice No:</b> {{$bill_data[0]->invoice_id}}</span>
+                            <br>
+                            <span style="padding-bottom: 3px; display: inline-block;"><b>Invoice Dt:</b> {{$order_data->invoice_date}}</span>
+                            <br>
+                            <span style="padding-bottom: 3px; display: inline-block;"><b>Order No:</b> {{$order_data->order_no}}</span>
+                            <br>
+                            <span style="padding-bottom: 3px; display: inline-block;"><b>Order Dt:</b> {{$order_data->order_date}}</span>
+                            <br>
+                            <span style="padding-bottom: 3px; display: inline-block;"><b>Place of Supply:</b> {{$order_data->place_of_supply}}</span>
+                            <br>
+                            <span style="padding-bottom: 3px; display: inline-block;"><b>Page No:</b> {{$page_no}}</span>
+                            <br>
+                            <span style="padding-bottom: 3px; display: inline-block;"><b>Vehicle No:</b> {{$order_data->vehicle_no}}</span>
+
+                        </td>
+                    </tr>
+                </table>
+
+
+
+                <!-- gst bill -->
+                @if($bill_data[0]->bill_type == 'gst')
+                <table style="position: relative;font-size: 13px; min-height: 370px; border-bottom: 1px solid #000;">
+
+                    <tr style="font-size: 5px;">
+                        <td style="width: 3%; border-left: none;font-size: 12px;"><b>Sl No.</b></td>
+                        <td style="width: 10%;font-size: 12px;"><b>HSN/SAC</b></td>
+                        <td style="width:36.4%;font-size: 12px;"><b>Description</b></td>
+                        <td style="font-size: 12px;width: 10.4%;"><b>Qty</b></td>
+                        <td style="font-size: 12px;width: 8%;"><b>Unit</b></td>
+                        <td style="font-size: 12px;width: 9.8%;"><b>Rate</b></td>
+                        @if($bill_data[0]->igst == 'non igst')
+                        <td style="font-size: 12px;width: 6%;"><b>SGST %</b></td>
+                        <td style="font-size: 12px;width: 6%;"><b>CGST %</b></td>
+                        @else
+                        <td style="font-size: 12px; width:12%;" colspan="2"><b>IGST %</b></td>
+                        @endif
+
+                        <td style="border-right: none;font-size: 12px;width: 10.7%;"><b>Amount</b></td>
+                    </tr>
+
+                    @php
+                    $count = 0;
+                    @endphp
+
+                    <?php
+                    for ($j = ($page_no - 1) * $per_page_data; $j < ($page_no) * $per_page_data; $j++) {
+
+                        $key = $j;
+                        if (count($bill_data) > $j) {
+                            $bill = $bill_data[$j];
+                    ?>
+                            @php
+                            $count++;
+                            $total = $bill->quantity * $bill->rate;
+                            $net_total = $net_total + $total;
+                            $net_qty = $net_qty + $bill->quantity;
+                            @endphp
+                            <tr>
+                                <td style="border-top: none; border-left: none;  border-bottom: none; vertical-align:top;padding-top:5px;">{{$key+1}}</td>
+                                <td style="border-top: none; border-left: none; border-bottom: none; vertical-align:top;padding-top:5px;">{{$bill->hsn_code}}</td>
+                                <td style="text-align: left;border: none;border-right: 1px solid #000; word-break: break-all;vertical-align:top;padding-top:5px;"><b>{{$bill->bill_work_type2}}</b><br>{{ !empty($bill->description) ? $bill->description : '-' }}</td>
+                                <td style="text-align: center;border: none;border-right: 1px solid #000; word-break: break-all;vertical-align:top;padding-top:5px;"><b>{{number_format($bill->quantity, 2)}}</b></td>
+                                <td style="border: none;border-right: 1px solid #000; vertical-align:top;padding-top:5px;">{{$bill->unit}}</td>
+                                <td style="text-align: right;border: none;border-right: 1px solid #000;vertical-align:top;padding-top:5px;">{{number_format($bill->rate,2)}}</td>
+                                @if($bill_data[0]->igst == 'non igst')
+                                <td style="text-align: center;border: none;border-right: 1px solid #000;vertical-align:top;padding-top:5px;">{{number_format($bill->sgst_rate,2)}}</td>
+                                <td style="text-align: center;border: none;border-right: 1px solid #000;vertical-align:top;padding-top:5px;">{{number_format($bill->cgst_rate,2)}}</td>
+                                @else
+                                <td colspan="2" style="text-align: center;border: none;border-right: 1px solid #000;vertical-align:top;padding-top:5px;">{{$bill->igst_rate,2}}</td>
+                                @endif
+                                <td style="text-align: right;border: none; word-break: break-all;vertical-align:top;padding-top:5px;">{{number_format($total,2)}}</td>
+                            </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+                    <?php
+
+                    if ($pages != $page_no) {
+                        // echo $pages;
+                        // echo $page_no;
+                        // echo $count;
+                        // echo $per_page_data;
+
+                        if ($count < $per_page_data + 1) {
+
+                            for ($dammy = 0; $dammy <= 15 - $count; $dammy++) {
+                    ?>
+
+                                <tr style="min-height: 70px;">
+                                    <td style="border: none; border-right: 1px solid #000; color: #fff;">1
+                                        <br>
+                                        2
+                                        <br>3
+                                    </td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000; color: #fff;  "></td>
+                                    <td style=" border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+
+                                    @if($bill_data[0]->igst == 'non igst')
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;"></td>
+
+                                    @else
+                                    <td colspan="2" style="border: none;"></td>
+
+
+                                    @endif
+                                    <td style="border: none;border-left: 1px solid #000;"></td>
+                                </tr>
+
+                            <?php
+                            }
+                        }
+                    } else {
+                        echo $pages;
+                        echo $page_no;
+                        echo $count;
+                        echo $per_page_data;
+                        if ($count < $per_page_data + 1) {
+
+                            if ($count == 8 || $count == 9) {
+                            ?>
+                                <tr style="min-height: 70px;">
+                                    <td style="border: none; border-right: 1px solid #000; color:#fff; ">1
+                                        <br>
+                                        2
+                                        <br>3
+                                    </td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+
+                                    @if($bill_data[0]->igst == 'non igst')
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;"></td>
+
+                                    @else
+                                    <td colspan="2" style="border: none;"></td>
+
+
+                                    @endif
+                                    <td style="border: none;border-left: 1px solid #000;"></td>
+                                </tr>
+                            <?php
+                            }
+
+                            for ($dammy = 0; $dammy <= 8 - $count; $dammy++) {
+                                echo $dammy;
+                            ?>
+                                <tr style="min-height: 70px;">
+                                    <td style="border: none; border-right: 1px solid #000; color:#fff; ">1
+                                        <br>
+                                        2
+                                        <br>3
+                                    </td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+
+                                    @if($bill_data[0]->igst == 'non igst')
+                                    <td style="border: none;border-right: 1px solid #000;"></td>
+                                    <td style="border: none;"></td>
+
+                                    @else
+                                    <td colspan="2" style="border: none;"></td>
+
+
+                                    @endif
+                                    <td style="border: none;border-left: 1px solid #000;"></td>
+                                </tr>
+
+                    <?php
+                            }
+                        }
+                    }
+                    ?>
+
+
+                </table>
+
+                <?php
+
+                if ($page_no == $pages) {
+
+                ?>
+
+                    <table>
+                        <tr style="border-top: 1px solid #000;border-bottom: 1px solid #000; ">
+                            <!-- <td style="border: none; width:3% ; "></td>
+                             <td style="border: none; width:10% ; "></td> -->
+                            <td style="border: none; width:50% ; "></td>
+                            <td style="border: none;  width:10.4% ; border-left: 1px solid #000; border-right: 1px solid #000; word-break: break-all;">{{number_format($net_qty,2)}}</td>
+                            <td style="text-align: right;border: none; width: 8%;"></td>
+                            <!-- <td style="border: none; width: 9.8% ;"></td> -->
+                            @if($bill_data[0]->igst == 'non igst')
+                            <td style="border: none; width: 6%; "></td>
+                            <td style="border: none;  width: 6%; "></td>
+                            @else
+                            <td style="border: none;  width: 12%; "></td>
+                            @endif
+                            <td style="text-align: right; border: none; word-break: break-all;" colspan="2">
+                                <span style="font-family: DejaVu Sans; sans-serif; display: inline;">₹</span>{{number_format($net_total,2)}}
+                            </td>
+                        </tr>
+                    </table>
+
+                <?php
+                }
+                ?>
+
+                @php
+                $in_total = $net_total;
+                $round_off = $in_total - round($in_total);
+                @endphp
+
+                @php
+                $formatter = new \NumberFormatter('en', \NumberFormatter::SPELLOUT);
+                $amountInWords = ucfirst($formatter->format(round($in_total)));
+                @endphp
+
+
+
+                <!-- <table>
+                        <tr style="border-top: 1px solid #000;border-bottom:1px solid #000;">
+                            <td style="width: 50%; border: none; border-right: 1px solid #000;">
+                                <table>
+                                    <tr>
+                                        <td style="text-align: left;border: none; ">[IN Words] : {{$amountInWords}}.</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style=" border: none; ">
+
+                                <table>
+                                    <tr style="">
+                                        <td style="border: none; text-align: left;"><b>Net Amount</b></td>
+                                        <td style="border: none; text-align: right;">{{number_format($in_total)}}</td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                        </tr>
+                    </table> -->
+                @endif
+                <!-- gst bill -->
+
+
+
+                <!-- non gst bill -->
+                @if($bill_data[0]->bill_type == 'non gst')
+                <table style="position: relative; min-height: 450px;">
+
+                    <tbody>
+                        <tr>
+                            <td style="width: 3%; border-left: none;"><b>Sl No.</b></td>
+                            <td style="width:30%;"><b>Description</b></td>
+                            <td style="width:12.3%;"><b>Qty</b></td>
+                            <td><b>Unit</b></td>
+                            <td><b>Rate</b></td>
+                            <td style="border-right: none;"><b>Amount</b></td>
+                        </tr>
+                        @php
+                        $count = 0;
+                        @endphp
+
+
+                        <?php
+
+                        for ($j = ($page_no - 1) * $per_page_data; $j < ($page_no) * $per_page_data; $j++) {
+
+                            $key = $j;
+                            if (count($bill_data) > $j) {
+                                $bill = $bill_data[$j];
+                        ?>
+
+
+                                @php
+                                $count++;
+                                $total = $bill->quantity * $bill->rate;
+                                $net_total = $net_total + $total;
+                                $net_qty = $net_qty + $bill->quantity;
+                                @endphp
+
+                                <tr>
+                                    <td style="border-top: none; border-left: none;  border-bottom: none; vertical-align:top;padding-top:5px;">{{$key+1}}</td>
+                                    <td style="text-align: left;border: none;border-right: 1px solid #000; vertical-align:top;padding-top:5px;"><b>{{$bill->bill_work_type2}}</b><br>{{$bill->description}}</td>
+                                    <td style="text-align: center;border: none;border-right: 1px solid #000; vertical-align:top;padding-top:5px;"><b>{{number_format($bill->quantity,2)}}</b></td>
+                                    <td style="border: none;border-right: 1px solid #000; padding-left: 10px; vertical-align:top;padding-top:5px;">{{$bill->unit}}</td>
+                                    <td style="text-align: right;border: none;border-right: 1px solid #000; padding-right: 10px; vertical-align:top;padding-top:5px;">{{number_format($bill->rate,2)}}</td>
+                                    <td style="text-align: right;border: none;padding-right: 10px; vertical-align:top;padding-top:5px;">{{number_format($total,2)}}</td>
+                                </tr>
+
+
+                        <?php
+                            }
+                        }
+                        ?>
+
+
+                        <?php
+                        // dd($page_no, $pages, $count, $per_page_data);
+                        if ($pages != $page_no) {
+                            if ($count < $per_page_data + 1) {
+
+                                for ($dammy = 0; $dammy <= 14 - $count; $dammy++) {
+                        ?>
+                                    <tr style="min-height: 70px;">
+                                        <td style="border-top: none; border-left: none;  border-bottom: none; color:#fff;">1
+                                            <br>2
+                                            <br>3
+                                        </td>
+                                        <td style="text-align: left;border: none;border-right: 1px solid #000; "></td>
+                                        <td style="text-align: right;border: none;border-right: 1px solid #000;"><b></b></td>
+                                        <td style="border: none;border-right: 1px solid #000;"></td>
+                                        <td style="text-align: right;border: none;border-right: 1px solid #000;"></td>
+                                        <td style="text-align: right;border: none;"></td>
+                                    </tr>
+                                <?php
+                                }
+                            }
+                        } else {
+                            if ($count < $per_page_data + 1) {
+
+                                for ($dammy = 0; $dammy <= 9 - $count; $dammy++) {
+                                ?>
+                                    <tr style="min-height: 70px;">
+                                        <td style="border-top: none; border-left: none;  border-bottom: none;color:#fff;">1
+                                            <br>2 <br>3
+                                        </td>
+                                        <td style="text-align: left;border: none;border-right: 1px solid #000; "></td>
+                                        <td style="text-align: right;border: none;border-right: 1px solid #000;"><b></b></td>
+                                        <td style="border: none;border-right: 1px solid #000;"></td>
+                                        <td style="text-align: right;border: none;border-right: 1px solid #000;"></td>
+                                        <td style="text-align: right;border: none;"></td>
+                                    </tr>
+                        <?php
+                                }
+                            }
+                        }
+                        ?>
+
+                        <?php
+
+                        if ($page_no == $pages) {
+
+                        ?>
+
+
+
+                            <tr style="border-top: 1px solid #000; vertical-align: baseline;">
+                                <td style="border: none;width: 3%;"></td>
+                                <td style="width: 34%;border: none;"><b></b></td>
+                                <td style="text-align: right;border: none; border-right: 1px solid #000; vertical-align: baseline;border-left: 1px solid #000;">{{number_format($net_qty,2)}}</td>
+                                <td style="border: none;"></td>
+                                <td style="border: none;"></td>
+                                <td style="text-align: right; border: none;">
+                                    <span style="font-family: DejaVu Sans; sans-serif; display: inline;">₹</span>
+                                    {{number_format($net_total,2)}}
+                                </td>
+                            </tr>
+
+
+                        <?php
+                        }
+                        ?>
+
+                    </tbody>
+                </table>
+
+
+                <?php
+
+                if ($page_no == $pages) {
+
+                ?>
+                    <!-- <table>
+                        <tr style="border-top: 1px solid #000; ">
+                            <td style="border: none;width: 3%;"></td>
+                            <td style="width: 34%;border: none;"><b></b></td>
+                            <td style="text-align: left;border: none; border-right: 1px solid #000;">{{$net_qty}}</td>
+                            <td style="border: none;"></td>
+                            <td style="border: none;"></td>
+                            <td style="text-align: right; border: none;border-left: 1px solid #000;">{{number_format($net_total,2)}}</td>
+                        </tr>
+                    </table> -->
+                <?php
+                }
+                ?>
+
+                @php
+                $in_total = $net_total;
+                $round_off = $in_total - round($in_total);
+                @endphp
+
+                @php
+                $formatter = new \NumberFormatter('en', \NumberFormatter::SPELLOUT);
+                $amountInWords = ucfirst($formatter->format(round($in_total)));
+                @endphp
+
+
+
+
+                <table style="display: none;">
+                    <tr style="border-top: 3px solid #000; border-bottom: 3px solid #000;">
+                        <td style="width: 50%;  border-right: 3px solid #000;">
+                            <table>
+                                <tr>
+                                    <td style="text-align: left;border: none; "><b>[IN Words] : {{$amountInWords}}.</b></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width: 50%; border: none; padding: 0; ">
+
+                            <table>
+                                <tr style="padding: 0;">
+                                    <td style="border: none; text-align: left; "><b>NET AMOUNT</b></td>
+                                    <td style="border: none; text-align: right;">
+                                        <span style="font-family: DejaVu Sans; sans-serif; display: inline;">₹</span>
+                                        <b>{{number_format(round($in_total))}}</b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                    </tr>
+                </table>
+                @endif
+                <!-- non gst bill -->
+
+
+
+
+
+
+
+
+                <!-- @if($bill_data[0]->bill_type == 'non gst')
+                <table>
+                    <tr style="border-top: 1px solid #000; border-bottom: 1px solid #000;">
+                        <td style="border: none;width: 3%;"></td>
+                        <td style="width: 34%;border: none;"><b></b></td>
+                        <td style="text-align: right;border: none; border-right: 1px solid #000;">{{$net_qty}}</td>
+                        <td style="border: none;"></td>
+                        <td style="border: none;"></td>
+                        <td style="text-align: right; border: none;border-left: 1px solid #000;">{{number_format($net_total,2)}}</td>
+                    </tr>
+                </table>
+            @endif -->
+
+                <?php
+
+                if ($page_no == $pages) {
+
+                ?>
+                    @php
+                    $in_total = $net_total;
+                    $round_off = $in_total - round($in_total);
+                    @endphp
+                    @if($bill_data[0]->bill_type == 'gst')
+
+                    <!-- cgst+sgst -->
+                    @if($bill_data[0]->igst == 'non igst')
+                    <table style="width: 100%;">
+                        <tr style="border-top: 1px solid #000;">
+                            <td style="width: 50%; border: none; border-right: 1px solid #000; padding-left: 0; padding-right: 0;">
+                                <table style="border: none;">
+                                    <tr>
+                                        <td style="border: none; text-align: left; width: 15%; font-weight: 600; padding-bottom:5px;">GST </td>
+                                        <td style="border: none;text-align: left;width: 30%;font-weight: 600; padding-bottom:5px;">TAXABLE AMT </td>
+                                        <td style="border: none;text-align: left;width: 5%;font-weight: 600; padding-bottom:5px;"> </td>
+                                        <td style="border: none;text-align: left;width: 25%;font-weight: 600; padding-bottom:5px;">SGST</td>
+                                        <td style="border: none;text-align: left;width: 25%;font-weight: 600; padding-bottom:5px;">CGST</td>
+                                    </tr>
+
+
+                                    @php
+                                    $cgst_amnt = 0;
+                                    $sgst_amnt = 0;
+                                    $igst_amnt = 0;
+                                    @endphp
+
+                                    @foreach($gst_data as $gst)
+                                    @if($gst->gst_rate>0)
+                                    <tr>
+
+                                        <td style="border: none;text-align: left;">{{number_format($gst->gst_rate,2)}}%</td>
+                                        <td style="border: none;text-align: left;">of {{number_format($gst->total_amt,2)}}</td>
+                                        <td style="border: none;text-align: left;">=</td>
+                                        @php
+                                        $cgst_amnt = $cgst_amnt + $gst->gst_amt/2;
+                                        $sgst_amnt = $sgst_amnt + $gst->gst_amt/2;
+                                        $total_gst_amt = $cgst_amnt+$sgst_amnt
+                                        @endphp
+                                        <td style="border: none;text-align: left;">{{number_format($gst->gst_amt/2,2)}} +</td>
+                                        <td style="border: none;text-align: left;">{{number_format($gst->gst_amt/2,2)}}</td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+
+                                    <tr style="border-top: 1px solid #000;">
+                                        <td style="border: none;text-align: left;border-top: 1px solid #000;">TOTAL </td>
+                                        <td style="border: none;text-align: left;border-top: 1px solid #000;">{{number_format($net_total,2)}}</td>
+                                        <td style="border: none;text-align: left;border-top: 1px solid #000;"> </td>
+                                        <td style="border: none;text-align: left;border-top: 1px solid #000;">{{number_format($cgst_amnt,2)}}</td>
+                                        <td style="border: none;text-align: left;border-top: 1px solid #000;">{{number_format($sgst_amnt,2)}}</td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                            @if($bill_data[0]->bill_type == 'gst')
+                            @php
+                            $in_total = $net_total+$total_gst_amt;
+                            $round_off = $in_total - round($in_total);
+                            @endphp
+                            @else
+                            @php
+                            $in_total = $net_total;
+                            $round_off = $in_total - round($in_total);
+                            @endphp
+                            @endif
+                            <td style="width: 50%; border: none;padding:0;  ">
+                                <table style="padding: 0;height:auto; ">
+                                    <tr>
+
+                                        <td style="width: 81%; border: none; padding: 0;">
+                                            <table>
+                                                <tr>
+                                                    <td style="border: none; text-align: left; font-weight: 600; ">CGST</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border: none; text-align: left; font-weight: 600;">SGST</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border: none; text-align: left;">Round off</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="width: 23%; border: none; padding: 0;border-left: 1px solid #000;height:83px;">
+                                            <table>
+                                                <tr>
+                                                    <td style="border: none; text-align: right;   ">{{number_format($cgst_amnt,2)}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border: none; text-align: right;   ">{{number_format($sgst_amnt,2)}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="border: none; text-align: right; ">{{number_format($round_off,2)}}</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+
+                                    <!-- <tr style="padding: 0; height: 100%;">
+                                        <td style="border: none; text-align: left; font-weight: 600; ">CGST</td>
+                                        <td style="border: none; text-align: right;   border-left:1px solid #000; width: 18.7%;">{{number_format($cgst_amnt,2)}}</td>
+                                    </tr>
+                                    <tr style="padding: 0;">
+                                        <td style="border: none; text-align: left; font-weight: 600;">SGST</td>
+                                        <td style="border: none; text-align: right;   border-left:1px solid #000; width: 18.7%;">{{number_format($sgst_amnt,2)}}</td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td style="border: none; text-align: left;">Round off</td>
+                                        <td style="border: none; text-align: right;width: 18.7%; border-left:1px solid #000;">{{number_format($round_off,2)}}</td>
+                                    </tr> -->
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    @endif
+                    <!-- cgst+sgst -->
+
+                    <!-- igst -->
+                    @if($bill_data[0]->igst == 'igst')
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 50%; border: none; border-right: 1px solid #000; padding-left: 0; padding-right: 0;">
+                                <table style="border: none;">
+                                    <tr>
+                                        <td style="border: none; text-align: left; width: 20%; font-weight: 600; padding-bottom:5px;">GST </td>
+                                        <td style="border: none;text-align: left;width: 30%;font-weight: 600; padding-bottom:5px;">TAXABLE AMT </td>
+                                        <td style="border: none;text-align: left;width: 10%;font-weight: 600; padding-bottom:5px;"> </td>
+                                        <td style="border: none;text-align: left;width: 20%;font-weight: 600; padding-bottom:5px;">IGST</td>
+                                    </tr>
+
+
+                                    @php
+                                    $cgst_amnt = 0;
+                                    $sgst_amnt = 0;
+                                    $igst_amnt = 0;
+                                    @endphp
+
+                                    @foreach($gst_data as $gst)
+                                    @if($gst->gst_rate>0)
+                                    <tr>
+
+                                        <td style="border: none;text-align: left;">{{$gst->gst_rate}}%</td>
+                                        <td style="border: none;text-align: left;">of {{number_format($gst->total_amt,2)}}</td>
+                                        <td style="border: none;text-align: left;">=</td>
+                                        @php
+                                        $igst_amnt = $igst_amnt + $gst->gst_amt;
+                                        $total_gst_amt = $igst_amnt;
+                                        @endphp
+                                        <td style="border: none;text-align: left;">{{number_format($gst->gst_amt,2)}}</td>
+                                    </tr>
+                                    @endif
+                                    @endforeach
+
+                                    <tr style="border-top: 1px solid #000;">
+
+                                        <td style="border: none;text-align: left;">TOTAL </td>
+                                        <td style="border: none;text-align: left;">{{number_format($net_total,2)}}</td>
+                                        <td style="border: none;text-align: left;"> </td>
+                                        <td style="border: none;text-align: left;">{{number_format($igst_amnt,2)}}</td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                            @if($bill_data[0]->bill_type == 'gst')
+                            @php
+                            $in_total = $net_total+$total_gst_amt;
+                            $round_off = $in_total - round($in_total);
+                            @endphp
+                            @else
+                            @php
+                            $in_total = $net_total;
+                            $round_off = $in_total - round($in_total);
+                            @endphp
+                            @endif
+                            <td style="width: 50%; border: none;padding: 0;">
+                                <table style="">
+                                    <tr>
+                                        <td style="border: none; text-align: left;">IGST</td>
+                                        <td style="border: none; text-align: right; border-left: 1px solid #000; width: 18.3%;height:35px; padding: 0;">{{number_format($igst_amnt,2)}}</td>
+                                    </tr>
+
+                                    <!-- <tr style="border-top: 1px solid #000;">
+                                    <td style="border: none; text-align: left;">Discount</td>
+                                    <td style="border: none; text-align: right;"></td>
+                                </tr> -->
+
+                                    <tr>
+                                        <td style="border: none; text-align: left;">Round off</td>
+                                        <td style="border: none; text-align: right; border-left: 1px solid #000;width: 18.3%;height:35px; padding: 0;">{{number_format($round_off,2)}}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    @endif
+                    <!-- igst -->
+
+                    @endif
+
+
+
+                    <!-- @php
+                    $formatter = new \NumberFormatter('en', \NumberFormatter::SPELLOUT);
+                    $amountInWords = ucfirst($formatter->format(round($in_total)));
+                    @endphp
+
+
+
+                    <table>
+                        <tr style="border-top: 1px solid #000;">
+                            <td style="width: 60%; border: none; border-right: 1px solid #000;">
+                                <table>
+                                    <tr>
+                                        <td style="text-align: left;border: none; "><b>[IN Words] : {{$amountInWords}}.</b></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width: 40%; border: none; ">
+
+                                <table>
+                                    <tr style="">
+                                        <td style="border: none; text-align: left;"><b>Net Amount</b></td>
+                                        <td style="border: none; text-align: right;">{{number_format($in_total,2)}}</td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                        </tr>
+                    </table> -->
+
+
+                    <!-- gst bill -->
+                    @if($bill_data[0]->bill_type == 'gst')
+
+                    <table>
+                        <tr style="border: 2px solid #000;">
+                            <td style="width: 50%; border: none; border-right: 2px solid #000;">
+                                <table>
+                                    <tr>
+                                        <td style="text-align: left;border: none; font-size: 11px; "><b>[IN Words] : {{$amountInWords}} only.</b></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style=" border: none; padding: 0;">
+
+                                <table>
+                                    <tr style="">
+                                        <td style="border: none; text-align: left;"><b>NET AMOUNT</b></td>
+                                        <!-- <td style="border: none; text-align: right;  width: 20.5%; height: 19px; position:relative;"><img src="/home/backyard16/public_html/public/assets/img/logo/rupee.png" alt="rupee" style=" width:15px; height:15px; display: inline-block;position:absolute; left:0px; top:5px"><b>{{number_format(round($in_total))}}</b></td> -->
+                                        <td style="border: none; text-align: right; ">
+                                            <span style="font-family: DejaVu Sans; sans-serif; display: inline;">₹</span><b>{{number_format(round($in_total))}}.00</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                        </tr>
+                    </table>
+
+                    @endif
+                    <!-- gst bill -->
+
+                    <!-- non gst bill -->
+                    @if($bill_data[0]->bill_type == 'non gst')
+                    <table>
+                        <tr style="border: 2px solid #000; ">
+                            <td style="width: 50%; border: none; border-right: 2px solid #000;">
+                                <table>
+                                    <tr>
+                                        <td style="text-align: left;border: none; "><b>[IN Words] : {{$amountInWords}} only.</b></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width: 50%; border: none; padding: 0; ">
+
+                                <table>
+                                    <tr style="padding: 0;">
+                                        <td style="border: none; text-align: left; "><b>NET AMOUNT</b></td>
+                                        <td style="border: none; text-align: right;">
+                                            <span style="font-family: DejaVu Sans; sans-serif; display: inline;">₹</span>
+                                            <b>{{number_format(round($in_total))}}</b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+
+                        </tr>
+                    </table>
+                    @endif
+                    <!-- non gst bill -->
+
+                    <table>
+                        <tr>
+                            <td style="text-align: left; border: none;  position: relative; ">
+                                <span style="font-weight: 600; text-decoration: underline;">BANK DETAILS</span>
+                                <br>
+
+                                <span style="display: inline-block; padding-bottom: 2px;">FOR NEET/RTGS: <b>STATE BANK OF INDIA</b></span>
+                                <br>
+                                <span style="display: inline-block; padding-bottom: 2px;">A/C NO: <b>42840001299</b></span>
+                                <br>
+                                <span style="display: inline-block; padding-bottom: 2px;">BRANCH: <b>HAZRA ROAD BRANCH</b></span>
+                                <br>
+                                <span style="display: inline-block; padding-bottom: 2px;">IFSCCODE: <b>SBIN0001649</b></span>
+                                <br>
+                                <span>UPI Id: <b>backyardsixteen@SBI</b></span>
+                                <img src="{{public_path('/assets/img/logo/scanner.jpeg')}}" alt="" style="height: 90px; width: 100px; position: absolute; top: 5px;right: 27%;">
+                            </td>
+                            <td style="text-align: right; border-right: none; border-bottom: none; border-left: none; position:relative; border-top: none;">
+                                <span>E.&.O.E.
+                                </span>
+                                <br>
+                                <span><b>For BACKYARD 16</b></span>
+                                <br>
+                                <span style="display: inline-block; height: 30px;">
+                                    <img src="/home/backyard16/public_html/public/uploads/signatures/{{$auth_data->signature}}" alt="" style="height: 100%; width: 60px;right:0; object-fit:contain;">
+                                </span>
+                                <br>
+                                <span style="padding-right:15px;">{{$auth_data->name}}</span><br>
+                                <span>Authorized Sign.</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                <?php
+                }
+                ?>
+
+            </div>
+        </section>
+        <!-- ============= Project Section End ============== -->
+    <?php $page_no++;
+    }
+
+
+    ?>
+
+
+</body>
+
+</html>
